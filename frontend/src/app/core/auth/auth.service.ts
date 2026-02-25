@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, finalize, map, mapTo, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { API_BASE_URL } from '../api/api.config';
-import { AuthResponse, AuthSession, LoginRequest, MeResponse } from './auth.models';
+import { AuthResponse, AuthSession, LoginRequest, MeResponse, RefreshTokenRequest } from './auth.models';
 
 const STORAGE_KEY = 'pocket_finance_auth_session';
 
@@ -13,10 +13,12 @@ export class AuthService {
   private readonly apiBaseUrl = inject(API_BASE_URL);
 
   private readonly sessionState = signal<AuthSession | null>(this.readStoredSession());
+  private refreshRequest$: Observable<AuthSession> | null = null;
 
   readonly session = this.sessionState.asReadonly();
   readonly user = computed(() => this.sessionState()?.user ?? null);
-  readonly isAuthenticated = computed(() => !!this.sessionState()?.accessToken);
+  readonly isAuthenticated = computed(() => !!this.sessionState()?.accessToken && !this.isAccessTokenExpired());
+  readonly hasSession = computed(() => !!this.sessionState()?.refreshToken);
 
   login(payload: LoginRequest): Observable<AuthSession> {
     return this.http.post<AuthResponse>(`${this.apiBaseUrl}/auth/login`, payload).pipe(
@@ -25,13 +27,40 @@ export class AuthService {
     );
   }
 
+  refreshSession(): Observable<AuthSession> {
+    const session = this.sessionState();
+    if (!session?.refreshToken) {
+      return throwError(() => new Error('Sessao sem refresh token.'));
+    }
+
+    if (this.refreshRequest$) {
+      return this.refreshRequest$;
+    }
+
+    const payload: RefreshTokenRequest = { refreshToken: session.refreshToken };
+    this.refreshRequest$ = this.http.post<AuthResponse>(`${this.apiBaseUrl}/auth/refresh`, payload).pipe(
+      map((response) => this.toSession(response)),
+      tap((nextSession) => this.setSession(nextSession)),
+      finalize(() => {
+        this.refreshRequest$ = null;
+      }),
+      shareReplay({ bufferSize: 1, refCount: false })
+    );
+
+    return this.refreshRequest$;
+  }
+
   logout(): Observable<void> {
     if (!this.sessionState()) {
       return of(void 0);
     }
 
     return this.http.post<void>(`${this.apiBaseUrl}/auth/logout`, {}).pipe(
-      tap(() => this.clearSession())
+      tap(() => this.clearSession()),
+      catchError((error) => {
+        this.clearSession();
+        return throwError(() => error);
+      })
     );
   }
 
@@ -41,6 +70,45 @@ export class AuthService {
 
   accessToken(): string | null {
     return this.sessionState()?.accessToken ?? null;
+  }
+
+  refreshToken(): string | null {
+    return this.sessionState()?.refreshToken ?? null;
+  }
+
+  isAccessTokenExpired(): boolean {
+    const expiresAt = this.sessionState()?.expiresAt;
+    if (!expiresAt) {
+      return true;
+    }
+
+    return expiresAt <= Date.now();
+  }
+
+  bootstrapSession(): Observable<void> {
+    if (!this.sessionState()) {
+      return of(void 0);
+    }
+
+    return this.me().pipe(
+      tap((me) => this.patchUser(me)),
+      mapTo(void 0),
+      catchError(() =>
+        this.refreshSession().pipe(
+          switchMap(() => this.me()),
+          tap((me) => this.patchUser(me)),
+          mapTo(void 0),
+          catchError(() => {
+            this.clearSession();
+            return of(void 0);
+          })
+        )
+      )
+    );
+  }
+
+  updateUser(me: MeResponse): void {
+    this.patchUser(me);
   }
 
   clearSession(): void {
@@ -59,6 +127,22 @@ export class AuthService {
     } catch {
       // Ignore storage access failures in restricted contexts.
     }
+  }
+
+  private patchUser(user: MeResponse): void {
+    const current = this.sessionState();
+    if (!current) {
+      return;
+    }
+
+    this.setSession({
+      ...current,
+      user: {
+        id: user.id,
+        email: user.email,
+        fullName: user.fullName
+      }
+    });
   }
 
   private toSession(response: AuthResponse): AuthSession {
@@ -80,11 +164,6 @@ export class AuthService {
 
       const parsed = JSON.parse(raw) as AuthSession;
       if (!parsed?.accessToken || !parsed?.refreshToken) {
-        return null;
-      }
-
-      if (typeof parsed.expiresAt === 'number' && parsed.expiresAt <= Date.now()) {
-        localStorage.removeItem(STORAGE_KEY);
         return null;
       }
 

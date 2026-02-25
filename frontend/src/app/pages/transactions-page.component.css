@@ -1,5 +1,63 @@
-.table-panel {
+.transactions-panel {
   padding: 1rem;
+}
+
+.filters,
+.editor {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  align-items: end;
+}
+
+.filters label,
+.editor label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.filters label span,
+.editor label span {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.filters input,
+.filters select,
+.editor input,
+.editor select {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  padding: 0.65rem 0.75rem;
+}
+
+.filters input:focus,
+.filters select:focus,
+.editor input:focus,
+.editor select:focus {
+  outline: 2px solid rgba(82, 214, 165, 0.25);
+  border-color: rgba(82, 214, 165, 0.35);
+}
+
+.filters__search {
+  grid-column: span 2;
+}
+
+.filters__actions,
+.editor__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.editor {
+  grid-template-columns: 1.2fr 1fr 2fr 1fr 1.2fr auto;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .table-wrap {
@@ -9,7 +67,7 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 900px;
 }
 
 .table th,
@@ -17,6 +75,7 @@
   text-align: left;
   padding: 0.8rem 0.75rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  vertical-align: middle;
 }
 
 .table th {
@@ -26,7 +85,7 @@
 }
 
 .table td {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
 .table__amount-col,
@@ -37,8 +96,66 @@
 .table__amount {
   color: var(--danger);
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .table__amount--positive {
   color: var(--accent);
+}
+
+.table__actions-col {
+  text-align: right;
+}
+
+.table__actions {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.pager {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.pager__meta {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.pager__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (max-width: 1100px) {
+  .filters,
+  .editor {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filters__search,
+  .filters__actions,
+  .editor__actions {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .filters,
+  .editor {
+    grid-template-columns: 1fr;
+  }
+
+  .filters__search,
+  .filters__actions,
+  .editor__actions {
+    grid-column: auto;
+  }
 }

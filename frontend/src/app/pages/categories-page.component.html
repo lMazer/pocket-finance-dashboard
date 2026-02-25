@@ -3,20 +3,67 @@
     <div class="pf-card__header">
       <div>
         <h2 class="pf-card__title">Categorias</h2>
-        <p class="pf-card__subtitle">Grade inicial para gerenciamento de categorias.</p>
+        <p class="pf-card__subtitle">CRUD real conectado ao backend.</p>
       </div>
     </div>
 
-    <div class="categories__grid">
-      @for (category of categories; track category.name) {
-        <div class="category-card">
-          <span class="category-card__dot" [style.background]="category.color"></span>
-          <div>
-            <p class="category-card__name">{{ category.name }}</p>
-            <p class="category-card__type">{{ category.type }}</p>
-          </div>
+    <form class="categories__form" [formGroup]="categoryForm" (ngSubmit)="submit()">
+      <label class="field">
+        <span>Nome</span>
+        <input type="text" formControlName="name" placeholder="Ex.: Alimentacao" />
+      </label>
+
+      <label class="field field--color">
+        <span>Cor</span>
+        <div class="field__color-wrap">
+          <input type="color" formControlName="color" aria-label="Selecionar cor" />
+          <input type="text" formControlName="color" placeholder="#52d6a5" />
         </div>
-      }
-    </div>
+      </label>
+
+      <div class="categories__form-actions">
+        <button class="pf-btn pf-btn--primary" type="submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Salvando...' : editingCategoryId() ? 'Atualizar categoria' : 'Criar categoria' }}
+        </button>
+        @if (editingCategoryId()) {
+          <button class="pf-btn" type="button" (click)="cancelEdit()">Cancelar edicao</button>
+        }
+      </div>
+    </form>
+
+    @if (loadError()) {
+      <p class="pf-inline-error" role="alert">{{ loadError() }}</p>
+    }
+
+    @if (isLoading()) {
+      <p class="pf-empty">Carregando categorias...</p>
+    } @else if (!categories().length) {
+      <p class="pf-empty">Nenhuma categoria cadastrada ainda.</p>
+    } @else {
+      <div class="categories__grid">
+        @for (category of categories(); track trackByCategoryId($index, category)) {
+          <div class="category-card">
+            <div class="category-card__main">
+              <span class="category-card__dot" [style.background]="category.color"></span>
+              <div>
+                <p class="category-card__name">{{ category.name }}</p>
+                <p class="category-card__type pf-mono">{{ category.color }}</p>
+              </div>
+            </div>
+            <div class="category-card__actions">
+              <button class="pf-btn" type="button" (click)="edit(category)">Editar</button>
+              <button
+                class="pf-btn pf-btn--danger"
+                type="button"
+                (click)="delete(category)"
+                [disabled]="isDeletingId() === category.id"
+              >
+                {{ isDeletingId() === category.id ? 'Excluindo...' : 'Excluir' }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </article>
 </section>

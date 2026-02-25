@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../core/auth/auth.service';
+import { HttpActivityService } from '../core/http/http-activity.service';
+import { ToastService } from '../core/ui/toast.service';
 
 interface NavItem {
   label: string;
@@ -18,9 +20,13 @@ interface NavItem {
 })
 export class ShellLayoutComponent {
   private readonly authService = inject(AuthService);
+  private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
+  private readonly httpActivity = inject(HttpActivityService);
 
   protected readonly user = this.authService.user;
+  protected readonly isBusy = this.httpActivity.isBusy;
+  protected readonly toasts = this.toastService.messages;
   protected readonly isLoggingOut = signal(false);
   protected readonly navItems: NavItem[] = [
     { label: 'Dashboard', path: '/dashboard' },
@@ -38,6 +44,7 @@ export class ShellLayoutComponent {
     this.authService.logout().subscribe({
       next: () => {
         this.isLoggingOut.set(false);
+        this.toastService.info('Sessao encerrada.');
         void this.router.navigateByUrl('/login');
       },
       error: () => {
@@ -46,5 +53,9 @@ export class ShellLayoutComponent {
         void this.router.navigateByUrl('/login');
       }
     });
+  }
+
+  protected dismissToast(id: number): void {
+    this.toastService.dismiss(id);
   }
 }

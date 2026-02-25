@@ -1,35 +1,142 @@
 <section class="pf-page">
-  <article class="table-panel pf-card">
+  <article class="pf-card transactions-panel">
     <div class="pf-card__header">
       <div>
         <h2 class="pf-card__title">Transacoes</h2>
-        <p class="pf-card__subtitle">Tabela base para integrar listagem paginada da API.</p>
+        <p class="pf-card__subtitle">Listagem paginada + filtros + CRUD real.</p>
       </div>
     </div>
 
-    <div class="table-wrap">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Descricao</th>
-            <th>Categoria</th>
-            <th class="table__amount-col">Valor</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of tableRows; track row.date + row.description) {
-            <tr>
-              <td>{{ row.date }}</td>
-              <td>{{ row.description }}</td>
-              <td>{{ row.category }}</td>
-              <td class="table__amount" [class.table__amount--positive]="row.amount.startsWith('+')">
-                {{ row.amount }}
-              </td>
-            </tr>
+    <form class="filters" [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+      <label>
+        <span>Mes</span>
+        <input type="month" formControlName="month" />
+      </label>
+      <label>
+        <span>Categoria</span>
+        <select formControlName="category">
+          <option value="">Todas</option>
+          @for (category of categories(); track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
           }
-        </tbody>
-      </table>
-    </div>
+        </select>
+      </label>
+      <label>
+        <span>Tipo</span>
+        <select formControlName="type">
+          <option value="">Todos</option>
+          @for (type of transactionTypes; track type.value) {
+            <option [value]="type.value">{{ type.label }}</option>
+          }
+        </select>
+      </label>
+      <label class="filters__search">
+        <span>Busca</span>
+        <input type="search" formControlName="q" placeholder="Descricao" />
+      </label>
+      <div class="filters__actions">
+        <button class="pf-btn pf-btn--primary" type="submit">Filtrar</button>
+        <button class="pf-btn" type="button" (click)="clearFilters()">Limpar</button>
+      </div>
+    </form>
+
+    <form class="editor" [formGroup]="transactionForm" (ngSubmit)="submit()">
+      <label>
+        <span>Categoria</span>
+        <select formControlName="categoryId">
+          <option value="">Selecione...</option>
+          @for (category of categories(); track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        <span>Tipo</span>
+        <select formControlName="type">
+          @for (type of transactionTypes; track type.value) {
+            <option [value]="type.value">{{ type.label }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        <span>Descricao</span>
+        <input type="text" formControlName="description" placeholder="Ex.: Mercado" />
+      </label>
+      <label>
+        <span>Valor</span>
+        <input type="number" formControlName="amount" min="0.01" step="0.01" placeholder="0.00" />
+      </label>
+      <label>
+        <span>Data</span>
+        <input type="date" formControlName="date" />
+      </label>
+      <div class="editor__actions">
+        <button class="pf-btn pf-btn--primary" type="submit" [disabled]="isSaving() || !categories().length">
+          {{ isSaving() ? 'Salvando...' : editingTransactionId() ? 'Atualizar' : 'Criar transacao' }}
+        </button>
+        @if (editingTransactionId()) {
+          <button class="pf-btn" type="button" (click)="cancelEdit()">Cancelar</button>
+        }
+      </div>
+    </form>
+
+    @if (loadError()) {
+      <p class="pf-inline-error" role="alert">{{ loadError() }}</p>
+    }
+
+    @if (isLoading()) {
+      <p class="pf-empty">Carregando transacoes...</p>
+    } @else if (!(pageData()?.items?.length)) {
+      <p class="pf-empty">Nenhuma transacao encontrada para os filtros selecionados.</p>
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descricao</th>
+              <th>Categoria</th>
+              <th>Tipo</th>
+              <th class="table__amount-col">Valor</th>
+              <th class="table__actions-col">Acoes</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of pageData()!.items; track trackByTransactionId($index, row)) {
+              <tr>
+                <td>{{ row.date | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ row.description }}</td>
+                <td>{{ row.categoryName }}</td>
+                <td>{{ row.type === 'INCOME' ? 'Receita' : 'Despesa' }}</td>
+                <td [class]="amountClass(row.type)">
+                  {{ row.amount | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}
+                </td>
+                <td class="table__actions">
+                  <button class="pf-btn" type="button" (click)="edit(row)">Editar</button>
+                  <button
+                    class="pf-btn pf-btn--danger"
+                    type="button"
+                    (click)="delete(row)"
+                    [disabled]="isDeletingId() === row.id"
+                  >
+                    {{ isDeletingId() === row.id ? 'Excluindo...' : 'Excluir' }}
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pager">
+        <p class="pager__meta">
+          Pagina {{ pageData()!.page + 1 }} de {{ pageData()!.totalPages || 1 }} · {{ pageData()!.totalElements }} itens
+        </p>
+        <div class="pager__actions">
+          <button class="pf-btn" type="button" (click)="previousPage()" [disabled]="pageData()!.page === 0">Anterior</button>
+          <button class="pf-btn" type="button" (click)="nextPage()" [disabled]="pageData()!.last">Proxima</button>
+        </div>
+      </div>
+    }
   </article>
 </section>

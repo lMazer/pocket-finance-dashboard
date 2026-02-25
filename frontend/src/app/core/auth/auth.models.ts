@@ -38,3 +38,7 @@ export interface AuthSession {
   expiresAt: number;
   user: AuthUser;
 }
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
