@@ -32,6 +32,12 @@
   </aside>
 
   <div class="shell__content">
+    @if (isBusy()) {
+      <div class="shell__loading" aria-live="polite">
+        <span class="shell__loading-bar"></span>
+      </div>
+    }
+
     <header class="shell__topbar pf-card">
       <div>
         <p class="shell__topbar-label">Workspace</p>
@@ -55,3 +61,16 @@
     </main>
   </div>
 </div>
+
+@if (toasts().length) {
+  <aside class="toast-stack" aria-live="polite" aria-label="Notificacoes">
+    @for (toast of toasts(); track toast.id) {
+      <div class="toast" [class.toast--error]="toast.kind === 'error'" [class.toast--success]="toast.kind === 'success'">
+        <p class="toast__text">{{ toast.message }}</p>
+        <button type="button" class="toast__close" (click)="dismissToast(toast.id)" aria-label="Fechar notificacao">
+          ×
+        </button>
+      </div>
+    }
+  </aside>
+}

@@ -147,6 +147,43 @@
   color: var(--text-muted);
 }
 
+.budget-summary {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.budget-summary__row {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--text-muted);
+}
+
+.budget-summary__row strong {
+  color: var(--text);
+}
+
+.budget-summary__track {
+  width: 100%;
+  height: 0.6rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.budget-summary__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #85ffe0);
+}
+
+.budget-summary__caption {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
 @media (max-width: 900px) {
   .metrics {
     grid-template-columns: 1fr;

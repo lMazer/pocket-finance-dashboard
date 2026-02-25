@@ -3,9 +3,7 @@
     <div>
       <p class="hero__eyebrow">Painel inicial</p>
       <h2 class="hero__title">Seu panorama financeiro em um so lugar</h2>
-      <p class="hero__copy">
-        Estrutura inicial pronta para integrar os endpoints reais de transacoes, categorias e metas.
-      </p>
+      <p class="hero__copy">Dados reais do mes atual carregados via API (transacoes + budgets).</p>
     </div>
     <div class="hero__status" [class.hero__status--error]="apiHealthState() === 'error'">
       <span class="hero__status-dot" [class.hero__status-dot--ok]="apiHealthState() === 'ok'"></span>
@@ -13,53 +11,78 @@
     </div>
   </header>
 
-  <section class="metrics">
-    @for (item of highlights; track item.label) {
-      <article class="metric pf-card" [class.metric--positive]="item.tone === 'positive'" [class.metric--negative]="item.tone === 'negative'">
-        <p class="metric__label">{{ item.label }}</p>
-        <p class="metric__value">{{ item.value }}</p>
-      </article>
-    }
-  </section>
+  @if (loadError()) {
+    <p class="pf-inline-error" role="alert">{{ loadError() }}</p>
+  }
 
-  <section class="grid">
-    <article class="panel pf-card">
-      <div class="pf-card__header">
-        <div>
-          <h3 class="pf-card__title">Ultimas transacoes</h3>
-          <p class="pf-card__subtitle">Mock inicial ate conectar endpoint real.</p>
+  @if (isLoading()) {
+    <p class="pf-empty">Carregando dashboard...</p>
+  } @else {
+    <section class="metrics">
+      @for (item of highlights(); track item.label) {
+        <article class="metric pf-card" [class.metric--positive]="item.tone === 'positive'" [class.metric--negative]="item.tone === 'negative'">
+          <p class="metric__label">{{ item.label }}</p>
+          <p class="metric__value">{{ item.value | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</p>
+        </article>
+      }
+    </section>
+
+    <section class="grid">
+      <article class="panel pf-card">
+        <div class="pf-card__header">
+          <div>
+            <h3 class="pf-card__title">Ultimas transacoes</h3>
+            <p class="pf-card__subtitle">Top 5 do mes atual.</p>
+          </div>
+          <button class="pf-btn" type="button" (click)="reload()">Atualizar</button>
         </div>
-      </div>
 
-      <ul class="list">
-        @for (tx of recentTransactions; track tx.title + tx.date) {
-          <li class="list__item">
-            <div>
-              <p class="list__title">{{ tx.title }}</p>
-              <p class="list__meta">{{ tx.category }} · {{ tx.date }}</p>
-            </div>
-            <p class="list__amount" [class.list__amount--positive]="tx.amount.startsWith('+')">
-              {{ tx.amount }}
-            </p>
-          </li>
+        @if (!recentTransactions().length) {
+          <p class="pf-empty">Sem transacoes no mes atual.</p>
+        } @else {
+          <ul class="list">
+            @for (tx of recentTransactions(); track tx.id) {
+              <li class="list__item">
+                <div>
+                  <p class="list__title">{{ tx.description }}</p>
+                  <p class="list__meta">{{ tx.categoryName }} · {{ tx.date | date: 'dd/MM' }}</p>
+                </div>
+                <p class="list__amount" [class.list__amount--positive]="tx.type === 'INCOME'">
+                  {{ tx.amount | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}
+                </p>
+              </li>
+            }
+          </ul>
         }
-      </ul>
-    </article>
+      </article>
 
-    <article class="panel pf-card">
-      <div class="pf-card__header">
-        <div>
-          <h3 class="pf-card__title">Proximos passos</h3>
-          <p class="pf-card__subtitle">Checklist de integracao.</p>
+      <article class="panel pf-card">
+        <div class="pf-card__header">
+          <div>
+            <h3 class="pf-card__title">Metas do mes</h3>
+            <p class="pf-card__subtitle">Resumo consolidado das categorias com budget.</p>
+          </div>
         </div>
-      </div>
 
-      <ol class="todo">
-        <li>Conectar login JWT no Angular (auth + interceptor)</li>
-        <li>Buscar categorias via `/api/categories`</li>
-        <li>Buscar transacoes via `/api/transactions`</li>
-        <li>Calcular cards de resumo com dados reais</li>
-      </ol>
-    </article>
-  </section>
+        @if (!budgetSummary()) {
+          <p class="pf-empty">Nenhuma meta cadastrada neste mes.</p>
+        } @else {
+          <div class="budget-summary">
+            <p class="budget-summary__row">
+              <span>Total de metas</span>
+              <strong>{{ budgetSummary()!.total | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</strong>
+            </p>
+            <p class="budget-summary__row">
+              <span>Despesas nas categorias com meta</span>
+              <strong>{{ budgetSummary()!.spent | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</strong>
+            </p>
+            <div class="budget-summary__track" aria-hidden="true">
+              <div class="budget-summary__fill" [style.width.%]="budgetSummary()!.coverage"></div>
+            </div>
+            <p class="budget-summary__caption">{{ budgetSummary()!.coverage | number: '1.0-0' }}% do limite utilizado</p>
+          </div>
+        }
+      </article>
+    </section>
+  }
 </section>

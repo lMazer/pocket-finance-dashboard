@@ -3,28 +3,88 @@
     <div class="pf-card__header">
       <div>
         <h2 class="pf-card__title">Metas por categoria</h2>
-        <p class="pf-card__subtitle">Preview visual para futura integracao com budgets.</p>
+        <p class="pf-card__subtitle">Metas reais com progresso calculado pelas despesas do mes.</p>
+      </div>
+      <div class="budgets__totals pf-mono">
+        <span>Total usado: {{ totalUsed() | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</span>
+        <span>Total metas: {{ totalBudget() | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</span>
       </div>
     </div>
 
-    <div class="budgets__list">
-      @for (budget of budgets; track budget.category) {
-        <div class="budget-row">
-          <div class="budget-row__head">
-            <p class="budget-row__name">{{ budget.category }}</p>
-            <p class="budget-row__numbers pf-mono">
-              R$ {{ budget.used }} / R$ {{ budget.limit }}
-            </p>
-          </div>
-          <div class="budget-row__track" aria-hidden="true">
-            <div
-              class="budget-row__fill"
-              [style.width.%]="(budget.used / budget.limit) * 100"
-              [class.budget-row__fill--warn]="budget.used / budget.limit > 0.8"
-            ></div>
-          </div>
-        </div>
-      }
+    <div class="budgets__toolbar">
+      <form class="budgets__month" [formGroup]="monthForm" (ngSubmit)="reload()">
+        <label>
+          <span>Mes</span>
+          <input type="month" formControlName="month" />
+        </label>
+        <button class="pf-btn pf-btn--primary" type="submit">Atualizar</button>
+      </form>
+
+      <form class="budgets__create" [formGroup]="createBudgetForm" (ngSubmit)="createBudget()">
+        <label>
+          <span>Categoria</span>
+          <select formControlName="categoryId">
+            <option value="">Selecione...</option>
+            @for (category of availableCategories(); track category.id) {
+              <option [value]="category.id">{{ category.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>Valor da meta</span>
+          <input type="number" formControlName="amount" min="0.01" step="0.01" placeholder="0.00" />
+        </label>
+        <button class="pf-btn pf-btn--primary" type="submit" [disabled]="isCreating()">
+          {{ isCreating() ? 'Criando...' : 'Criar meta' }}
+        </button>
+      </form>
     </div>
+
+    @if (loadError()) {
+      <p class="pf-inline-error" role="alert">{{ loadError() }}</p>
+    }
+
+    @if (isLoading()) {
+      <p class="pf-empty">Carregando metas...</p>
+    } @else if (!budgets().length) {
+      <p class="pf-empty">Nenhuma meta cadastrada para este mes.</p>
+    } @else {
+      <div class="budgets__list">
+        @for (budget of budgets(); track trackByBudgetId($index, budget)) {
+          <div class="budget-row">
+            <div class="budget-row__head">
+              <div>
+                <p class="budget-row__name">{{ budget.categoryName }}</p>
+                <p class="budget-row__numbers pf-mono">
+                  {{ budgetUsage(budget.categoryId) | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }} /
+                  {{ budget.amount | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}
+                </p>
+              </div>
+              <div class="budget-row__edit">
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  [value]="draftAmounts()[budget.id]"
+                  (input)="onDraftAmountInput(budget.id, $event)"
+                  aria-label="Novo valor da meta"
+                />
+                <button class="pf-btn" type="button" (click)="saveBudget(budget)" [disabled]="savingBudgetId() === budget.id">
+                  {{ savingBudgetId() === budget.id ? 'Salvando...' : 'Salvar' }}
+                </button>
+              </div>
+            </div>
+
+            <div class="budget-row__track" aria-hidden="true">
+              <div
+                class="budget-row__fill"
+                [style.width.%]="budgetProgressPercent(budget)"
+                [class.budget-row__fill--warn]="budgetIsWarn(budget)"
+              ></div>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </article>
 </section>
