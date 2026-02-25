@@ -1,0 +1,35 @@
+<section class="pf-page">
+  <article class="table-panel pf-card">
+    <div class="pf-card__header">
+      <div>
+        <h2 class="pf-card__title">Transacoes</h2>
+        <p class="pf-card__subtitle">Tabela base para integrar listagem paginada da API.</p>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Descricao</th>
+            <th>Categoria</th>
+            <th class="table__amount-col">Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of tableRows; track row.date + row.description) {
+            <tr>
+              <td>{{ row.date }}</td>
+              <td>{{ row.description }}</td>
+              <td>{{ row.category }}</td>
+              <td class="table__amount" [class.table__amount--positive]="row.amount.startsWith('+')">
+                {{ row.amount }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

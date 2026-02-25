@@ -1,0 +1,30 @@
+<section class="pf-page">
+  <article class="pf-card budgets">
+    <div class="pf-card__header">
+      <div>
+        <h2 class="pf-card__title">Metas por categoria</h2>
+        <p class="pf-card__subtitle">Preview visual para futura integracao com budgets.</p>
+      </div>
+    </div>
+
+    <div class="budgets__list">
+      @for (budget of budgets; track budget.category) {
+        <div class="budget-row">
+          <div class="budget-row__head">
+            <p class="budget-row__name">{{ budget.category }}</p>
+            <p class="budget-row__numbers pf-mono">
+              R$ {{ budget.used }} / R$ {{ budget.limit }}
+            </p>
+          </div>
+          <div class="budget-row__track" aria-hidden="true">
+            <div
+              class="budget-row__fill"
+              [style.width.%]="(budget.used / budget.limit) * 100"
+              [class.budget-row__fill--warn]="budget.used / budget.limit > 0.8"
+            ></div>
+          </div>
+        </div>
+      }
+    </div>
+  </article>
+</section>

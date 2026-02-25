@@ -1,0 +1,44 @@
+.table-panel {
+  padding: 1rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.8rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.table th {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.table td {
+  font-size: 0.92rem;
+}
+
+.table__amount-col,
+.table__amount {
+  text-align: right;
+}
+
+.table__amount {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.table__amount--positive {
+  color: var(--accent);
+}
