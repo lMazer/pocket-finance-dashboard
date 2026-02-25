@@ -28,6 +28,8 @@ app:
     refresh-token-days: ${JWT_REFRESH_TOKEN_DAYS:7}
     issuer: ${JWT_ISSUER:pocket-finance-api}
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

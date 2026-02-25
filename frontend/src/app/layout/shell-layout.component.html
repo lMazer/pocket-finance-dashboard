@@ -1,0 +1,57 @@
+<div class="shell">
+  <aside class="shell__sidebar pf-card">
+    <div class="brand">
+      <div class="brand__mark" aria-hidden="true">PF</div>
+      <div>
+        <p class="brand__eyebrow">Pocket Finance</p>
+        <h1 class="brand__title">Dashboard</h1>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Navegacao principal">
+      @for (item of navItems; track item.path) {
+        <a
+          class="nav__link"
+          [routerLink]="item.path"
+          routerLinkActive="nav__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <span>{{ item.label }}</span>
+          @if (item.badge) {
+            <span class="nav__badge">{{ item.badge }}</span>
+          }
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-foot">
+      <p class="sidebar-foot__label">Ambiente</p>
+      <p class="sidebar-foot__value pf-mono">Docker Dev</p>
+      <p class="sidebar-foot__hint">Auto-reload ativo para frontend e backend.</p>
+    </div>
+  </aside>
+
+  <div class="shell__content">
+    <header class="shell__topbar pf-card">
+      <div>
+        <p class="shell__topbar-label">Workspace</p>
+        <p class="shell__topbar-title">Controle Financeiro Pessoal</p>
+        @if (user()) {
+          <p class="shell__topbar-user">{{ user()!.fullName }} · {{ user()!.email }}</p>
+        }
+      </div>
+      <div class="shell__topbar-actions">
+        <a class="topbar-link" href="http://localhost:38080/swagger-ui/index.html" target="_blank" rel="noopener">
+          Swagger
+        </a>
+        <button class="topbar-link topbar-link--button" type="button" (click)="logout()" [disabled]="isLoggingOut()">
+          {{ isLoggingOut() ? 'Saindo...' : 'Sair' }}
+        </button>
+      </div>
+    </header>
+
+    <main class="shell__main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

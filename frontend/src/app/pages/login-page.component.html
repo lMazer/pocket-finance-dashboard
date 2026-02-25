@@ -1,0 +1,40 @@
+<section class="login">
+  <div class="login__panel pf-card">
+    <div>
+      <p class="login__eyebrow">Pocket Finance</p>
+      <h1 class="login__title">Entrar</h1>
+      <p class="login__copy">
+        Tela inicial de autenticacao. No proximo passo vamos conectar com `POST /auth/login`.
+      </p>
+    </div>
+
+    <form class="login__form" [formGroup]="loginForm" (ngSubmit)="submit()">
+      <label class="field">
+        <span>Email</span>
+        <input type="email" formControlName="email" placeholder="voce@email.com" />
+        @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+          <small class="field__error">Informe um email valido.</small>
+        }
+      </label>
+
+      <label class="field">
+        <span>Senha</span>
+        <input type="password" formControlName="password" placeholder="********" />
+        @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+          <small class="field__error">Senha obrigatoria.</small>
+        }
+      </label>
+
+      <button class="login__button" type="submit" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Entrando...' : 'Entrar' }}
+      </button>
+
+      @if (submitError()) {
+        <p class="login__error" role="alert">{{ submitError() }}</p>
+      }
+    </form>
+
+    <p class="login__hint pf-mono">demo&#64;pocket.local / demo123</p>
+    <a class="login__back" routerLink="/dashboard">Voltar ao dashboard</a>
+  </div>
+</section>

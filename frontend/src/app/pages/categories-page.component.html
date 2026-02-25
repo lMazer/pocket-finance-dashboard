@@ -1,0 +1,22 @@
+<section class="pf-page">
+  <article class="pf-card categories">
+    <div class="pf-card__header">
+      <div>
+        <h2 class="pf-card__title">Categorias</h2>
+        <p class="pf-card__subtitle">Grade inicial para gerenciamento de categorias.</p>
+      </div>
+    </div>
+
+    <div class="categories__grid">
+      @for (category of categories; track category.name) {
+        <div class="category-card">
+          <span class="category-card__dot" [style.background]="category.color"></span>
+          <div>
+            <p class="category-card__name">{{ category.name }}</p>
+            <p class="category-card__type">{{ category.type }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </article>
+</section>

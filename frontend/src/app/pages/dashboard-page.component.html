@@ -1,0 +1,65 @@
+<section class="pf-page">
+  <header class="hero pf-card">
+    <div>
+      <p class="hero__eyebrow">Painel inicial</p>
+      <h2 class="hero__title">Seu panorama financeiro em um so lugar</h2>
+      <p class="hero__copy">
+        Estrutura inicial pronta para integrar os endpoints reais de transacoes, categorias e metas.
+      </p>
+    </div>
+    <div class="hero__status" [class.hero__status--error]="apiHealthState() === 'error'">
+      <span class="hero__status-dot" [class.hero__status-dot--ok]="apiHealthState() === 'ok'"></span>
+      <span>{{ apiHealthLabel() }}</span>
+    </div>
+  </header>
+
+  <section class="metrics">
+    @for (item of highlights; track item.label) {
+      <article class="metric pf-card" [class.metric--positive]="item.tone === 'positive'" [class.metric--negative]="item.tone === 'negative'">
+        <p class="metric__label">{{ item.label }}</p>
+        <p class="metric__value">{{ item.value }}</p>
+      </article>
+    }
+  </section>
+
+  <section class="grid">
+    <article class="panel pf-card">
+      <div class="pf-card__header">
+        <div>
+          <h3 class="pf-card__title">Ultimas transacoes</h3>
+          <p class="pf-card__subtitle">Mock inicial ate conectar endpoint real.</p>
+        </div>
+      </div>
+
+      <ul class="list">
+        @for (tx of recentTransactions; track tx.title + tx.date) {
+          <li class="list__item">
+            <div>
+              <p class="list__title">{{ tx.title }}</p>
+              <p class="list__meta">{{ tx.category }} · {{ tx.date }}</p>
+            </div>
+            <p class="list__amount" [class.list__amount--positive]="tx.amount.startsWith('+')">
+              {{ tx.amount }}
+            </p>
+          </li>
+        }
+      </ul>
+    </article>
+
+    <article class="panel pf-card">
+      <div class="pf-card__header">
+        <div>
+          <h3 class="pf-card__title">Proximos passos</h3>
+          <p class="pf-card__subtitle">Checklist de integracao.</p>
+        </div>
+      </div>
+
+      <ol class="todo">
+        <li>Conectar login JWT no Angular (auth + interceptor)</li>
+        <li>Buscar categorias via `/api/categories`</li>
+        <li>Buscar transacoes via `/api/transactions`</li>
+        <li>Calcular cards de resumo com dados reais</li>
+      </ol>
+    </article>
+  </section>
+</section>
