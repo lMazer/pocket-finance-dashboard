@@ -10,11 +10,14 @@ import { Category, PageResponse, Transaction, TransactionType } from '../core/ap
 import { ReportsService } from '../core/api/reports.service';
 import { TransactionsService } from '../core/api/transactions.service';
 import { ToastService } from '../core/ui/toast.service';
+import { StateEmptyComponent } from '../shared/state/state-empty.component';
+import { StateErrorComponent } from '../shared/state/state-error.component';
+import { StateLoadingComponent } from '../shared/state/state-loading.component';
 
 @Component({
   selector: 'app-transactions-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, StateEmptyComponent, StateErrorComponent, StateLoadingComponent],
   templateUrl: './transactions-page.component.html',
   styleUrl: './transactions-page.component.css'
 })

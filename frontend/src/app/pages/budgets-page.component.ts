@@ -10,11 +10,14 @@ import { CategoriesService } from '../core/api/categories.service';
 import { Budget, Category, Transaction } from '../core/api/finance.models';
 import { TransactionsService } from '../core/api/transactions.service';
 import { ToastService } from '../core/ui/toast.service';
+import { StateEmptyComponent } from '../shared/state/state-empty.component';
+import { StateErrorComponent } from '../shared/state/state-error.component';
+import { StateLoadingComponent } from '../shared/state/state-loading.component';
 
 @Component({
   selector: 'app-budgets-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, StateEmptyComponent, StateErrorComponent, StateLoadingComponent],
   templateUrl: './budgets-page.component.html',
   styleUrl: './budgets-page.component.css'
 })

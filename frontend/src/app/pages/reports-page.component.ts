@@ -7,11 +7,12 @@ import { CategoriesService } from '../core/api/categories.service';
 import { Category, CsvImportResponse } from '../core/api/finance.models';
 import { ReportsService } from '../core/api/reports.service';
 import { ToastService } from '../core/ui/toast.service';
+import { StateErrorComponent } from '../shared/state/state-error.component';
 
 @Component({
   selector: 'app-reports-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, StateErrorComponent],
   templateUrl: './reports-page.component.html',
   styleUrl: './reports-page.component.css'
 })

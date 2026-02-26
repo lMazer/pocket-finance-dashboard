@@ -32,13 +32,13 @@
     </form>
 
     @if (loadError()) {
-      <p class="pf-inline-error" role="alert">{{ loadError() }}</p>
+      <app-state-error [message]="loadError()!" />
     }
 
     @if (isLoading()) {
-      <p class="pf-empty">Carregando categorias...</p>
+      <app-state-loading message="Carregando categorias..." />
     } @else if (!categories().length) {
-      <p class="pf-empty">Nenhuma categoria cadastrada ainda.</p>
+      <app-state-empty message="Nenhuma categoria cadastrada ainda." />
     } @else {
       <div class="categories__grid">
         @for (category of categories(); track trackByCategoryId($index, category)) {

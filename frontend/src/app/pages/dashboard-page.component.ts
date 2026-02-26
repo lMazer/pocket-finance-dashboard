@@ -6,6 +6,9 @@ import { BudgetsService } from '../core/api/budgets.service';
 import { HealthService } from '../core/api/health.service';
 import { Budget, Transaction } from '../core/api/finance.models';
 import { TransactionsService } from '../core/api/transactions.service';
+import { StateEmptyComponent } from '../shared/state/state-empty.component';
+import { StateErrorComponent } from '../shared/state/state-error.component';
+import { StateLoadingComponent } from '../shared/state/state-loading.component';
 
 type HealthState = 'loading' | 'ok' | 'error';
 
@@ -18,7 +21,7 @@ interface DashboardHighlight {
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StateEmptyComponent, StateErrorComponent, StateLoadingComponent],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.css'
 })

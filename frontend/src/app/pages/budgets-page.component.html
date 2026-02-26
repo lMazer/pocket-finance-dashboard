@@ -49,13 +49,13 @@
     </div>
 
     @if (loadError()) {
-      <p class="pf-inline-error" role="alert">{{ loadError() }}</p>
+      <app-state-error [message]="loadError()!" />
     }
 
     @if (isLoading()) {
-      <p class="pf-empty">Carregando metas...</p>
+      <app-state-loading message="Carregando metas..." />
     } @else if (!budgets().length) {
-      <p class="pf-empty">Nenhuma meta cadastrada para este mes.</p>
+      <app-state-empty message="Nenhuma meta cadastrada para este mes." />
     } @else {
       <div class="budgets__list">
         @for (budget of budgets(); track trackByBudgetId($index, budget)) {

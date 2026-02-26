@@ -12,11 +12,11 @@
   </header>
 
   @if (loadError()) {
-    <p class="pf-inline-error" role="alert">{{ loadError() }}</p>
+    <app-state-error [message]="loadError()!" />
   }
 
   @if (isLoading()) {
-    <p class="pf-empty">Carregando dashboard...</p>
+    <app-state-loading message="Carregando dashboard..." />
   } @else {
     <section class="metrics">
       @for (item of highlights(); track item.label) {
@@ -38,7 +38,7 @@
         </div>
 
         @if (!recentTransactions().length) {
-          <p class="pf-empty">Sem transacoes no mes atual.</p>
+          <app-state-empty message="Sem transacoes no mes atual." />
         } @else {
           <ul class="list">
             @for (tx of recentTransactions(); track tx.id) {
@@ -65,7 +65,7 @@
         </div>
 
         @if (!budgetSummary()) {
-          <p class="pf-empty">Nenhuma meta cadastrada neste mes.</p>
+          <app-state-empty message="Nenhuma meta cadastrada neste mes." />
         } @else {
           <div class="budget-summary">
             <p class="budget-summary__row">
