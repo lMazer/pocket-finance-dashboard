@@ -66,4 +66,17 @@ class ReportControllerTest {
         assertArrayEquals(payload, response.getBody());
         verify(csvService).exportCsv(principal.getUserId(), "2026-02", categoryId);
     }
+
+    @Test
+    void exportCsvShouldAllowNullFilters() {
+        byte[] payload = "date,description\n".getBytes(StandardCharsets.UTF_8);
+        when(csvService.exportCsv(principal.getUserId(), null, null)).thenReturn(payload);
+
+        ResponseEntity<byte[]> response = controller.exportCsv(principal, null, null);
+
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals("text/csv", response.getHeaders().getContentType().toString());
+        assertArrayEquals(payload, response.getBody());
+        verify(csvService).exportCsv(principal.getUserId(), null, null);
+    }
 }
