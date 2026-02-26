@@ -61,6 +61,16 @@ export interface TransactionListQuery {
   page?: number;
 }
 
+export interface CsvImportResponse {
+  imported: number;
+  skipped: number;
+}
+
+export interface CsvExportQuery {
+  month?: string | null;
+  category?: string | null;
+}
+
 export interface Budget {
   id: string;
   categoryId: string;
