@@ -14,7 +14,7 @@
     </div>
 
     @if (pageError()) {
-      <p class="pf-inline-error" role="alert">{{ pageError() }}</p>
+      <app-state-error [message]="pageError()!" />
     }
 
     @if (lastImportResult()) {

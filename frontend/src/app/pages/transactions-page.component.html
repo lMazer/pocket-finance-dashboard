@@ -91,13 +91,13 @@
     </form>
 
     @if (loadError()) {
-      <p class="pf-inline-error" role="alert">{{ loadError() }}</p>
+      <app-state-error [message]="loadError()!" />
     }
 
     @if (isLoading()) {
-      <p class="pf-empty">Carregando transacoes...</p>
+      <app-state-loading message="Carregando transacoes..." />
     } @else if (!(pageData()?.items?.length)) {
-      <p class="pf-empty">Nenhuma transacao encontrada para os filtros selecionados.</p>
+      <app-state-empty message="Nenhuma transacao encontrada para os filtros selecionados." />
     } @else {
       <div class="table-wrap">
         <table class="table">

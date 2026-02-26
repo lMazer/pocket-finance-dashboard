@@ -6,11 +6,14 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoriesService } from '../core/api/categories.service';
 import { Category } from '../core/api/finance.models';
 import { ToastService } from '../core/ui/toast.service';
+import { StateEmptyComponent } from '../shared/state/state-empty.component';
+import { StateErrorComponent } from '../shared/state/state-error.component';
+import { StateLoadingComponent } from '../shared/state/state-loading.component';
 
 @Component({
   selector: 'app-categories-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, StateEmptyComponent, StateErrorComponent, StateLoadingComponent],
   templateUrl: './categories-page.component.html',
   styleUrl: './categories-page.component.css'
 })
