@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.1.0...pocket-finance-frontend-v1.2.0) (2026-02-26)
+
+
+### Features
+
+* add CSV template download to transactions page ([04d4da9](https://github.com/lMazer/pocket-finance-dashboard/commit/04d4da954a8633c55cd2b52456e2b9100e0ab7c9))
+* add CSV template download to transactions page ([4dc0d6e](https://github.com/lMazer/pocket-finance-dashboard/commit/4dc0d6e4a4d4cc265967ee0ac5fa3df4b8aa68e1))
+* persist budgets month filter in URL ([99701b8](https://github.com/lMazer/pocket-finance-dashboard/commit/99701b8f60b153e4f600cdf54a5e282377c068e7))
+* persist budgets month filter in URL ([7dd8e42](https://github.com/lMazer/pocket-finance-dashboard/commit/7dd8e4235f8bad7e7ac13f2d9d1ef5b6277078db))
+
 ## [1.1.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.0.0...pocket-finance-frontend-v1.1.0) (2026-02-26)
 
 
