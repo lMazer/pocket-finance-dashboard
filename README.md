@@ -107,6 +107,14 @@ Status rapido da stack (containers + URLs):
 powershell -ExecutionPolicy Bypass -File .\scripts\dev-status.ps1
 ```
 
+Logs rapidos por servico:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\dev-logs.ps1 -Service backend
+powershell -ExecutionPolicy Bypass -File .\scripts\dev-logs.ps1 -Service frontend
+powershell -ExecutionPolicy Bypass -File .\scripts\dev-logs.ps1 -Service backend -NoFollow -Tail 50
+```
+
 ### Inicializar automaticamente com o Docker
 
 Os serviços no `compose.dev.yml` usam `restart: unless-stopped`. Isso significa:
