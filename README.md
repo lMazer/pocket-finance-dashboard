@@ -172,6 +172,11 @@ Para a action criar PRs/releases automaticamente, o repositório precisa permiti
 - `Read and write permissions`
 - `Allow GitHub Actions to create and approve pull requests`
 
+## Planejamento e aprovacao
+
+- Roadmap MVP por sprint: `docs/roadmap-mvp.md`
+- Checklist de aprovacao (PR/entrega): `docs/approval-checklist.md`
+
 ## Qualidade (builds e warnings)
 
 - A CI valida:
