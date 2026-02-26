@@ -1,3 +1,5 @@
+<a class="pf-skip-link" href="#pf-main-content">Pular para o conteudo</a>
+
 <div class="shell">
   <aside class="shell__sidebar pf-card" [class.shell__sidebar--open]="isNavOpen()">
     <div class="brand">
@@ -50,7 +52,7 @@
           (click)="toggleNav()"
           [attr.aria-expanded]="isNavOpen()"
           aria-controls="pf-mobile-nav"
-          aria-label="Abrir menu"
+          [attr.aria-label]="isNavOpen() ? 'Fechar menu' : 'Abrir menu'"
         >
           ☰
         </button>
@@ -70,7 +72,7 @@
       </div>
     </header>
 
-    <main class="shell__main">
+    <main class="shell__main" id="pf-main-content" tabindex="-1">
       <router-outlet />
     </main>
   </div>
