@@ -1,5 +1,5 @@
 <section class="pf-page">
-  <article class="pf-card transactions-panel">
+  <article class="pf-card transactions-panel" [attr.aria-busy]="isLoading() || isSaving() || isImporting() || isExporting()">
     <div class="pf-card__header">
       <div>
         <h2 class="pf-card__title">Transacoes</h2>
@@ -101,14 +101,17 @@
     } @else {
       <div class="table-wrap">
         <table class="table">
+          <caption class="pf-sr-only">
+            Tabela de transacoes filtradas com colunas de data, descricao, categoria, tipo, valor e acoes.
+          </caption>
           <thead>
             <tr>
-              <th>Data</th>
-              <th>Descricao</th>
-              <th>Categoria</th>
-              <th>Tipo</th>
-              <th class="table__amount-col">Valor</th>
-              <th class="table__actions-col">Acoes</th>
+              <th scope="col">Data</th>
+              <th scope="col">Descricao</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Tipo</th>
+              <th scope="col" class="table__amount-col">Valor</th>
+              <th scope="col" class="table__actions-col">Acoes</th>
             </tr>
           </thead>
           <tbody>
