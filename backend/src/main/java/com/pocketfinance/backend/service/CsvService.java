@@ -24,6 +24,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Transactional
 public class CsvService {
+    private static final Logger log = LoggerFactory.getLogger(CsvService.class);
 
     private final UserRepository userRepository;
     private final CategoryService categoryService;
@@ -60,9 +63,10 @@ public class CsvService {
         Map<String, Category> categoryCache = new HashMap<>();
 
         CSVFormat format = CSVFormat.DEFAULT.builder()
-                .setHeader()
+                .setHeader("date", "description", "amount", "type", "category")
                 .setSkipHeaderRecord(true)
                 .setIgnoreHeaderCase(true)
+                .setIgnoreEmptyLines(true)
                 .setTrim(true)
                 .build();
 
@@ -90,6 +94,7 @@ public class CsvService {
                     transaction.setDate(date);
                     toSave.add(transaction);
                 } catch (Exception ex) {
+                    log.warn("CSV import skipped row {}: {}", record.getRecordNumber(), ex.getMessage());
                     skipped++;
                 }
             }
