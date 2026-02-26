@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.0.0...pocket-finance-frontend-v1.1.0) (2026-02-26)
+
+
+### Features
+
+* add CSV import and export to transactions UI ([e2b4bff](https://github.com/lMazer/pocket-finance-dashboard/commit/e2b4bff5beb447751b602ec6553a122111ee2000))
+* add CSV import and export to transactions UI ([d7e543c](https://github.com/lMazer/pocket-finance-dashboard/commit/d7e543ca6f46b3e3ef09a9febe6f742c0a177033))
+* add proactive auth refresh and auth unit tests ([c27598c](https://github.com/lMazer/pocket-finance-dashboard/commit/c27598c2b38375e23e8034689e9b541d5c39c67e))
+* add proactive auth refresh and auth unit tests ([af46ff3](https://github.com/lMazer/pocket-finance-dashboard/commit/af46ff32e29553ce2d1e42f7dae00df40c640bd5))
+* improve budgets month navigation and validation UX ([99fcfa3](https://github.com/lMazer/pocket-finance-dashboard/commit/99fcfa344cfa55800bbe9d6d805239a1971ffdd1))
+* improve budgets month navigation and validation UX ([16183b5](https://github.com/lMazer/pocket-finance-dashboard/commit/16183b5913b4320417c7184956ea7974f4cd3ff8))
+* persist transaction filters in URL ([0b4fe70](https://github.com/lMazer/pocket-finance-dashboard/commit/0b4fe7082555f0105acfa0f92619372f4d7e3bef))
+* persist transaction filters in URL ([e0e60d3](https://github.com/lMazer/pocket-finance-dashboard/commit/e0e60d3c22d61341da2e2c50cd0b1679ee42cce6))
+
 ## 1.0.0 (2026-02-26)
 
 
