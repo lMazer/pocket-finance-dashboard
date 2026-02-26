@@ -40,6 +40,17 @@ docker compose -f compose.dev.yml up -d --build
 
 As portas acima refletem o `.env` versionado no projeto. Se você sobrescrever variáveis (`BACKEND_PORT`, `FRONTEND_PORT`, `POSTGRES_PORT`), os endpoints mudam de acordo.
 
+### Variáveis de ambiente (dev)
+
+Variáveis mais usadas no ambiente Docker dev:
+
+- `FRONTEND_PORT`: porta publicada do Angular (`34200` por padrão)
+- `BACKEND_PORT`: porta publicada da API Spring (`38080` por padrão)
+- `POSTGRES_PORT`: porta publicada do PostgreSQL (`35432` por padrão)
+- `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`: credenciais do banco em `compose.dev.yml`
+
+O fluxo padrão usa os valores do arquivo `.env` versionado.
+
 ### Auto-reload
 
 - Alterações em `frontend/` recarregam no `ng serve`
@@ -124,6 +135,38 @@ Os serviços no `compose.dev.yml` usam `restart: unless-stopped`. Isso significa
 
 No Windows, ative no Docker Desktop a opção de iniciar automaticamente com o sistema.
 
+## Uso da aplicação (MVP)
+
+### Credenciais de desenvolvimento
+
+- E-mail: `demo@pocket.local`
+- Senha: `demo123`
+
+### Rotas principais do frontend
+
+- `/login` - autenticação JWT
+- `/dashboard` - resumo financeiro e status da API
+- `/transactions` - CRUD de transações, filtros e CSV rápido
+- `/categories` - CRUD de categorias
+- `/budgets` - metas por categoria
+- `/reports` - import/export CSV dedicado
+
+## APIs principais (backend)
+
+Base local padrão: `http://localhost:38080`
+
+- `POST /auth/login`
+- `POST /auth/refresh`
+- `POST /auth/logout`
+- `GET /auth/me`
+- `GET/POST/PATCH/DELETE /categories`
+- `GET/POST/PATCH/DELETE /transactions`
+- `GET/POST/PATCH /budgets`
+- `POST /import/csv`
+- `GET /export/csv`
+- `GET /actuator/health`
+- `GET /v3/api-docs`
+
 ## Versionamento automático (releases)
 
 O repositório está configurado para versionamento automático de release com **Release Please** (GitHub Actions).
@@ -176,6 +219,28 @@ Para a action criar PRs/releases automaticamente, o repositório precisa permiti
 
 - Roadmap MVP por sprint: `docs/roadmap-mvp.md`
 - Checklist de aprovacao (PR/entrega): `docs/approval-checklist.md`
+
+## Evidencias (prints)
+
+Capturas de referência geradas no ambiente Docker dev:
+
+### Login (frontend)
+
+![Tela de login](docs/prints/login.png)
+
+### Swagger UI (backend)
+
+![Swagger UI](docs/prints/swagger.png)
+
+### Atualizar prints (opcional)
+
+Foi adicionado um script de captura em `scripts/capture-readme-prints.mjs` (usa Playwright + Chrome local) para regenerar capturas do README.
+
+Exemplo (se `playwright` estiver instalado localmente):
+
+```bash
+node scripts/capture-readme-prints.mjs
+```
 
 ## Qualidade (builds e warnings)
 
