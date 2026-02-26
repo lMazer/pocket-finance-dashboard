@@ -74,7 +74,7 @@
 .nav {
   display: grid;
   align-content: start;
-  gap: 0.45rem;
+  gap: .45rem;
 }
 
 .nav__link {
@@ -95,6 +95,10 @@
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.06);
   transform: translateY(-1px);
+}
+.nav__link:focus-visible {
+  outline: none;
+  border-color: rgba(82, 214, 165, 0.45);
 }
 
 .nav__link--active {
@@ -206,8 +210,9 @@
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.02);
-  padding: 0.45rem 0.7rem;
-  font-size: 0.82rem;
+  padding: .45rem 0.7rem;
+  font-size: .82rem;
+  transition: border-color 120ms ease, color 120ms ease;
 }
 
 .topbar-link--button {
@@ -222,10 +227,6 @@
 .topbar-link:hover {
   border-color: rgba(82, 214, 165, 0.35);
   color: var(--accent);
-}
-
-.topbar-link--button:hover {
-  background: rgba(255, 255, 255, 0.05);
 }
 
 .shell__main {
@@ -281,6 +282,7 @@
   line-height: 1;
   cursor: pointer;
   padding: 0;
+  transition: color 120ms ease;
 }
 
 .toast__close:hover {
