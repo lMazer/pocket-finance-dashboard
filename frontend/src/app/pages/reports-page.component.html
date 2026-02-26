@@ -1,0 +1,82 @@
+<section class="pf-page">
+  <article class="pf-card reports">
+    <div class="pf-card__header">
+      <div>
+        <h2 class="pf-card__title">Relatorios CSV</h2>
+        <p class="pf-card__subtitle">Importe transacoes em lote e exporte relatorios filtrados por mes/categoria.</p>
+      </div>
+      <div class="reports__actions">
+        <button class="pf-btn" type="button" (click)="downloadTemplate()">Modelo CSV</button>
+        <button class="pf-btn" type="button" (click)="reloadCategories()" [disabled]="isLoadingCategories()">
+          {{ isLoadingCategories() ? 'Atualizando...' : 'Atualizar categorias' }}
+        </button>
+      </div>
+    </div>
+
+    @if (pageError()) {
+      <p class="pf-inline-error" role="alert">{{ pageError() }}</p>
+    }
+
+    @if (lastImportResult()) {
+      <p class="reports__result pf-mono">
+        Ultima importacao: {{ lastImportResult()!.imported }} importadas · {{ lastImportResult()!.skipped }} ignoradas
+      </p>
+    }
+
+    <div class="reports__grid">
+      <section class="reports-card">
+        <header class="reports-card__header">
+          <h3>Importar CSV</h3>
+          <p>Envie um arquivo `.csv` com transacoes para importacao em lote.</p>
+        </header>
+
+        <ol class="reports-card__steps">
+          <li>Baixe o modelo CSV para usar o cabecalho esperado.</li>
+          <li>Preencha linhas com `date`, `description`, `amount`, `type`, `category`.</li>
+          <li>Envie o arquivo para importar no backend.</li>
+        </ol>
+
+        <label class="reports-upload" [class.reports-upload--disabled]="isImporting()">
+          <span>{{ isImporting() ? 'Importando...' : 'Selecionar arquivo CSV' }}</span>
+          <input type="file" accept=".csv,text/csv" (change)="importCsv($event)" [disabled]="isImporting()" />
+        </label>
+
+        <p class="reports-card__hint">
+          Tipos aceitos: <code>expense</code> e <code>income</code>. Valores decimais com ponto.
+        </p>
+      </section>
+
+      <section class="reports-card">
+        <header class="reports-card__header">
+          <h3>Exportar CSV</h3>
+          <p>Baixe um relatorio CSV com base nos filtros atuais.</p>
+        </header>
+
+        <form class="reports-form" [formGroup]="exportForm" (ngSubmit)="exportCsv()">
+          <label>
+            <span>Mes</span>
+            <input type="month" formControlName="month" />
+          </label>
+
+          <label>
+            <span>Categoria</span>
+            <select formControlName="category" [disabled]="isLoadingCategories()">
+              <option value="">Todas</option>
+              @for (category of categories(); track category.id) {
+                <option [value]="category.id">{{ category.name }}</option>
+              }
+            </select>
+          </label>
+
+          <button class="pf-btn pf-btn--primary" type="submit" [disabled]="isExporting()">
+            {{ isExporting() ? 'Exportando...' : 'Exportar CSV' }}
+          </button>
+        </form>
+
+        <p class="reports-card__hint">
+          O backend retorna um arquivo <code>transactions.csv</code> (ou nome customizado via header).
+        </p>
+      </section>
+    </div>
+  </article>
+</section>
