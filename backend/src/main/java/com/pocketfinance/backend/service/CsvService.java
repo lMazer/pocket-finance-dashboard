@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -63,7 +64,7 @@ public class CsvService {
         Map<String, Category> categoryCache = new HashMap<>();
 
         CSVFormat format = CSVFormat.DEFAULT.builder()
-                .setHeader("date", "description", "amount", "type", "category")
+                .setHeader()
                 .setSkipHeaderRecord(true)
                 .setIgnoreHeaderCase(true)
                 .setIgnoreEmptyLines(true)
@@ -72,6 +73,7 @@ public class CsvService {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
              CSVParser parser = format.parse(reader)) {
+            validateCsvHeaders(parser);
 
             for (CSVRecord record : parser) {
                 try {
@@ -139,6 +141,17 @@ public class CsvService {
             throw new BadRequestException("Coluna obrigatoria ausente: " + column);
         }
         return value;
+    }
+
+    private void validateCsvHeaders(CSVParser parser) {
+        Map<String, Integer> headers = parser.getHeaderMap();
+        Set<String> requiredHeaders = Set.of("date", "description", "amount", "type", "category");
+
+        for (String header : requiredHeaders) {
+            if (!headers.containsKey(header)) {
+                throw new BadRequestException("CSV invalido. Cabecalho obrigatorio ausente: " + header);
+            }
+        }
     }
 
     private String colorFromName(String name) {
