@@ -45,10 +45,11 @@ jobs:
       - name: Install frontend dependencies
         working-directory: frontend
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install --no-package-lock
+          npm ci --include=optional
+          # Workaround for npm optional-deps bug affecting Rollup binaries in Angular builds on GitHub runners.
+          ROLLUP_LINUX_BIN_VERSION=$(node -e "const lock=require('./package-lock.json'); process.stdout.write(lock.packages['node_modules/rollup']?.optionalDependencies?.['@rollup/rollup-linux-x64-gnu'] || '')")
+          if [ -n "$ROLLUP_LINUX_BIN_VERSION" ]; then
+            npm install --no-save --no-audit --no-fund "@rollup/rollup-linux-x64-gnu@$ROLLUP_LINUX_BIN_VERSION"
           fi
 
       - name: Build frontend

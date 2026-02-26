@@ -31,11 +31,14 @@ docker compose -f compose.dev.yml up -d --build
 
 ### Acessos
 
-- Frontend: `http://localhost:4200`
-- Backend API: `http://localhost:8080`
-- Swagger UI: `http://localhost:8080/swagger-ui.html`
-- Health (Actuator): `http://localhost:8080/actuator/health`
-- PostgreSQL: `localhost:5432`
+- Frontend: `http://localhost:34200`
+- Backend API: `http://localhost:38080`
+- Swagger UI: `http://localhost:38080/swagger-ui/index.html`
+- OpenAPI JSON: `http://localhost:38080/v3/api-docs`
+- Health (Actuator): `http://localhost:38080/actuator/health`
+- PostgreSQL: `localhost:35432`
+
+As portas acima refletem o `.env` versionado no projeto. Se você sobrescrever variáveis (`BACKEND_PORT`, `FRONTEND_PORT`, `POSTGRES_PORT`), os endpoints mudam de acordo.
 
 ### Auto-reload
 
@@ -78,6 +81,12 @@ O repositório está configurado para versionamento automático de release com *
   - changelog
   - tags/releases no GitHub (quando a PR de release for mergeada)
 
+### Primeiro ciclo já validado
+
+- Workflow `Release Please` configurado e validado
+- PR de release automática criada (`chore: release main`)
+- Merge da PR de release gerou release/tag automática do frontend
+
 ### Convenção de commits (importante)
 
 Use mensagens no padrão **Conventional Commits**:
@@ -98,3 +107,11 @@ Exemplos:
 - `frontend/` -> release Node/Angular (atualiza `frontend/package.json`)
 
 As tags serão separadas por componente (ex.: `backend-v...` e `frontend-v...`).
+
+### Observação sobre permissões do GitHub Actions
+
+Para a action criar PRs/releases automaticamente, o repositório precisa permitir escrita do `GITHUB_TOKEN`:
+
+- `Settings > Actions > General > Workflow permissions`
+- `Read and write permissions`
+- `Allow GitHub Actions to create and approve pull requests`
