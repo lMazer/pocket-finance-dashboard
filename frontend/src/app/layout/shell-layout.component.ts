@@ -31,6 +31,7 @@ export class ShellLayoutComponent {
   protected readonly navItems: NavItem[] = [
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'Transacoes', path: '/transactions' },
+    { label: 'Relatorios', path: '/reports', badge: 'CSV' },
     { label: 'Categorias', path: '/categories' },
     { label: 'Metas', path: '/budgets', badge: 'MVP' }
   ];
