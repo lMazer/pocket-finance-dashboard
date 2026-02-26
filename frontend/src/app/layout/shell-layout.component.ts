@@ -28,6 +28,7 @@ export class ShellLayoutComponent {
   protected readonly isBusy = this.httpActivity.isBusy;
   protected readonly toasts = this.toastService.messages;
   protected readonly isLoggingOut = signal(false);
+  protected readonly isNavOpen = signal(false);
   protected readonly navItems: NavItem[] = [
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'Transacoes', path: '/transactions' },
@@ -54,6 +55,14 @@ export class ShellLayoutComponent {
         void this.router.navigateByUrl('/login');
       }
     });
+  }
+
+  protected toggleNav(): void {
+    this.isNavOpen.update((value) => !value);
+  }
+
+  protected closeNav(): void {
+    this.isNavOpen.set(false);
   }
 
   protected dismissToast(id: number): void {

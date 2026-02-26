@@ -16,12 +16,20 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 1rem;
+  align-content: start;
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+}
+
+.brand > div:nth-child(2) {
+  min-width: 0;
 }
 
 .brand__mark {
@@ -45,6 +53,22 @@
 .brand__title {
   margin: 0.15rem 0 0;
   font-size: 1.05rem;
+}
+
+.sidebar-toggle {
+  display: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  min-width: 42px;
+  height: 42px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.sidebar-toggle--inside {
+  margin-left: auto;
 }
 
 .nav {
@@ -155,6 +179,10 @@
   letter-spacing: 0.08em;
 }
 
+.shell__topbar > div:first-child {
+  min-width: 0;
+}
+
 .shell__topbar-title {
   margin: 0.2rem 0 0;
   font-weight: 700;
@@ -202,6 +230,10 @@
 
 .shell__main {
   min-width: 0;
+}
+
+.shell__backdrop {
+  display: none;
 }
 
 .toast-stack {
@@ -277,15 +309,59 @@
 
   .shell__sidebar {
     grid-template-rows: auto auto auto;
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    z-index: 30;
+    max-height: calc(100vh - 1.5rem);
+    overflow: auto;
+    transform: translateY(-8px) scale(0.98);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 140ms ease, opacity 140ms ease;
+  }
+
+  .shell__sidebar--open {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .brand {
+    align-items: flex-start;
+  }
+
+  .sidebar-toggle {
+    display: inline-grid;
+    place-items: center;
   }
 
   .nav {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 
   .shell__topbar {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .shell__topbar-actions {
+    width: 100%;
+  }
+
+  .shell__topbar-actions > * {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+
+  .shell__backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    border: 0;
+    z-index: 20;
   }
 
   .toast-stack {
@@ -296,7 +372,15 @@
 }
 
 @media (max-width: 640px) {
-  .nav {
-    grid-template-columns: 1fr;
+  .shell__topbar {
+    padding: 0.8rem;
+  }
+
+  .shell__topbar-title {
+    font-size: 0.95rem;
+  }
+
+  .shell__topbar-user {
+    word-break: break-word;
   }
 }

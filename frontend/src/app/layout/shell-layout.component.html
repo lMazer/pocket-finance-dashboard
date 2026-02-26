@@ -1,18 +1,22 @@
 <div class="shell">
-  <aside class="shell__sidebar pf-card">
+  <aside class="shell__sidebar pf-card" [class.shell__sidebar--open]="isNavOpen()">
     <div class="brand">
       <div class="brand__mark" aria-hidden="true">PF</div>
       <div>
         <p class="brand__eyebrow">Pocket Finance</p>
         <h1 class="brand__title">Dashboard</h1>
       </div>
+      <button class="sidebar-toggle sidebar-toggle--inside" type="button" (click)="closeNav()" aria-label="Fechar menu">
+        ✕
+      </button>
     </div>
 
-    <nav class="nav" aria-label="Navegacao principal">
+    <nav class="nav" id="pf-mobile-nav" aria-label="Navegacao principal">
       @for (item of navItems; track item.path) {
         <a
           class="nav__link"
           [routerLink]="item.path"
+          (click)="closeNav()"
           routerLinkActive="nav__link--active"
           [routerLinkActiveOptions]="{ exact: true }"
         >
@@ -40,6 +44,16 @@
 
     <header class="shell__topbar pf-card">
       <div>
+        <button
+          class="sidebar-toggle"
+          type="button"
+          (click)="toggleNav()"
+          [attr.aria-expanded]="isNavOpen()"
+          aria-controls="pf-mobile-nav"
+          aria-label="Abrir menu"
+        >
+          ☰
+        </button>
         <p class="shell__topbar-label">Workspace</p>
         <p class="shell__topbar-title">Controle Financeiro Pessoal</p>
         @if (user()) {
@@ -61,6 +75,10 @@
     </main>
   </div>
 </div>
+
+@if (isNavOpen()) {
+  <button class="shell__backdrop" type="button" (click)="closeNav()" aria-label="Fechar menu"></button>
+}
 
 @if (toasts().length) {
   <aside class="toast-stack" aria-live="polite" aria-label="Notificacoes">
