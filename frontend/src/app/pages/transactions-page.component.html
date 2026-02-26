@@ -117,14 +117,14 @@
           <tbody>
             @for (row of pageData()!.items; track trackByTransactionId($index, row)) {
               <tr>
-                <td>{{ row.date | date: 'dd/MM/yyyy' }}</td>
-                <td>{{ row.description }}</td>
-                <td>{{ row.categoryName }}</td>
-                <td>{{ row.type === 'INCOME' ? 'Receita' : 'Despesa' }}</td>
-                <td [class]="amountClass(row.type)">
+                <td data-label="Data">{{ row.date | date: 'dd/MM/yyyy' }}</td>
+                <td data-label="Descricao">{{ row.description }}</td>
+                <td data-label="Categoria">{{ row.categoryName }}</td>
+                <td data-label="Tipo">{{ row.type === 'INCOME' ? 'Receita' : 'Despesa' }}</td>
+                <td data-label="Valor" [class]="amountClass(row.type)">
                   {{ row.amount | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}
                 </td>
-                <td class="table__actions">
+                <td data-label="Acoes" class="table__actions">
                   <button class="pf-btn" type="button" (click)="edit(row)">Editar</button>
                   <button
                     class="pf-btn pf-btn--danger"
