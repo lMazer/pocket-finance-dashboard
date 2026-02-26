@@ -7,6 +7,7 @@
     "build": "ng build",
     "build:ci": "ng build --configuration production",
     "spec:check": "tsc -p tsconfig.spec.json --noEmit",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadless --no-progress",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
