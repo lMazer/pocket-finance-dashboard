@@ -3,7 +3,7 @@
     <div class="pf-card__header">
       <div>
         <h2 class="pf-card__title">Metas por categoria</h2>
-        <p class="pf-card__subtitle">Metas reais com progresso calculado pelas despesas do mes.</p>
+        <p class="pf-card__subtitle">Metas reais com progresso por despesas do mes e navegacao mensal rapida.</p>
       </div>
       <div class="budgets__totals pf-mono">
         <span>Total usado: {{ totalUsed() | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</span>
@@ -13,6 +13,11 @@
 
     <div class="budgets__toolbar">
       <form class="budgets__month" [formGroup]="monthForm" (ngSubmit)="reload()">
+        <div class="budgets__month-nav">
+          <button class="pf-btn" type="button" (click)="previousMonth()">Mes anterior</button>
+          <button class="pf-btn" type="button" (click)="currentMonth()">Mes atual</button>
+          <button class="pf-btn" type="button" (click)="nextMonth()">Proximo mes</button>
+        </div>
         <label>
           <span>Mes</span>
           <input type="month" formControlName="month" />
@@ -38,6 +43,9 @@
           {{ isCreating() ? 'Criando...' : 'Criar meta' }}
         </button>
       </form>
+      @if (createFormError()) {
+        <p class="pf-inline-error budgets__create-error" role="alert">{{ createFormError() }}</p>
+      }
     </div>
 
     @if (loadError()) {
@@ -59,6 +67,9 @@
                   {{ budgetUsage(budget.categoryId) | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }} /
                   {{ budget.amount | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}
                 </p>
+                <p class="budget-row__status" [class.budget-row__status--warn]="budgetIsWarn(budget)" [class.budget-row__status--danger]="budgetIsExceeded(budget)">
+                  {{ budgetStatusText(budget) }}
+                </p>
               </div>
               <div class="budget-row__edit">
                 <input
@@ -74,6 +85,9 @@
                 </button>
               </div>
             </div>
+            @if (draftError(budget.id)) {
+              <p class="pf-inline-error budget-row__error" role="alert">{{ draftError(budget.id) }}</p>
+            }
 
             <div class="budget-row__track" aria-hidden="true">
               <div

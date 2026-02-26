@@ -31,6 +31,8 @@ export class BudgetsPageComponent {
   protected readonly draftAmounts = signal<Record<string, number>>({});
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
+  protected readonly createFormError = signal<string | null>(null);
+  protected readonly draftErrorsByBudgetId = signal<Record<string, string>>({});
   protected readonly isCreating = signal(false);
   protected readonly savingBudgetId = signal<string | null>(null);
 
@@ -51,11 +53,31 @@ export class BudgetsPageComponent {
     this.loadData();
   }
 
+  protected previousMonth(): void {
+    this.shiftMonth(-1);
+  }
+
+  protected nextMonth(): void {
+    this.shiftMonth(1);
+  }
+
+  protected currentMonth(): void {
+    this.monthForm.controls.month.setValue(this.currentMonthRef());
+    this.loadData();
+  }
+
   protected createBudget(): void {
     this.createBudgetForm.markAllAsTouched();
     this.loadError.set(null);
+    this.createFormError.set(null);
 
     if (this.createBudgetForm.invalid || this.isCreating()) {
+      this.createFormError.set('Selecione uma categoria e informe um valor maior que zero.');
+      return;
+    }
+
+    if (!this.availableCategories().length) {
+      this.createFormError.set('Todas as categorias ja possuem meta neste mes.');
       return;
     }
 
@@ -71,6 +93,7 @@ export class BudgetsPageComponent {
       .subscribe({
         next: () => {
           this.isCreating.set(false);
+          this.createFormError.set(null);
           this.toastService.success('Meta criada.');
           this.createBudgetForm.reset({ categoryId: '', amount: null });
           this.loadData();
@@ -85,6 +108,14 @@ export class BudgetsPageComponent {
   protected onDraftAmountInput(budgetId: string, event: Event): void {
     const value = Number((event.target as HTMLInputElement).value);
     this.draftAmounts.update((drafts) => ({ ...drafts, [budgetId]: Number.isFinite(value) ? value : 0 }));
+    this.draftErrorsByBudgetId.update((errors) => {
+      if (!errors[budgetId]) {
+        return errors;
+      }
+      const next = { ...errors };
+      delete next[budgetId];
+      return next;
+    });
   }
 
   protected saveBudget(budget: Budget): void {
@@ -94,7 +125,10 @@ export class BudgetsPageComponent {
 
     const nextAmount = this.draftAmounts()[budget.id];
     if (!nextAmount || nextAmount <= 0) {
-      this.loadError.set('Informe um valor maior que zero para salvar a meta.');
+      this.draftErrorsByBudgetId.update((errors) => ({
+        ...errors,
+        [budget.id]: 'Informe um valor maior que zero.'
+      }));
       return;
     }
 
@@ -105,6 +139,14 @@ export class BudgetsPageComponent {
       .subscribe({
         next: (updated) => {
           this.savingBudgetId.set(null);
+          this.draftErrorsByBudgetId.update((errors) => {
+            if (!errors[updated.id]) {
+              return errors;
+            }
+            const next = { ...errors };
+            delete next[updated.id];
+            return next;
+          });
           this.budgets.update((items) => items.map((item) => (item.id === updated.id ? updated : item)));
           this.draftAmounts.update((drafts) => ({ ...drafts, [updated.id]: Number(updated.amount) }));
           this.toastService.success('Meta atualizada.');
@@ -134,6 +176,34 @@ export class BudgetsPageComponent {
       return false;
     }
     return this.budgetUsage(budget.categoryId) / amount > 0.8;
+  }
+
+  protected budgetIsExceeded(budget: Budget): boolean {
+    const amount = Number(budget.amount) || 0;
+    if (amount <= 0) {
+      return false;
+    }
+    return this.budgetUsage(budget.categoryId) > amount;
+  }
+
+  protected budgetStatusText(budget: Budget): string {
+    const amount = Number(budget.amount) || 0;
+    if (amount <= 0) {
+      return 'Meta sem valor valido.';
+    }
+
+    const ratio = this.budgetUsage(budget.categoryId) / amount;
+    if (ratio > 1) {
+      return 'Meta excedida';
+    }
+    if (ratio > 0.8) {
+      return 'Proximo do limite';
+    }
+    return 'Dentro da meta';
+  }
+
+  protected draftError(budgetId: string): string | null {
+    return this.draftErrorsByBudgetId()[budgetId] ?? null;
   }
 
   protected availableCategories(): Category[] {
@@ -189,6 +259,20 @@ export class BudgetsPageComponent {
 
   private currentMonthRef(): string {
     return new Date().toISOString().slice(0, 7);
+  }
+
+  private shiftMonth(delta: number): void {
+    const [yearString, monthString] = this.monthForm.controls.month.value.split('-');
+    const year = Number(yearString);
+    const month = Number(monthString);
+    if (!Number.isInteger(year) || !Number.isInteger(month)) {
+      return;
+    }
+
+    const next = new Date(Date.UTC(year, month - 1 + delta, 1));
+    const nextMonthRef = `${next.getUTCFullYear()}-${String(next.getUTCMonth() + 1).padStart(2, '0')}`;
+    this.monthForm.controls.month.setValue(nextMonthRef);
+    this.loadData();
   }
 
   private resolveErrorMessage(error: unknown, fallback: string): string {
