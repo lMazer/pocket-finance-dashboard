@@ -64,3 +64,37 @@ Os serviços no `compose.dev.yml` usam `restart: unless-stopped`. Isso significa
 - se você parar manualmente um container, ele não sobe de novo até você iniciar
 
 No Windows, ative no Docker Desktop a opção de iniciar automaticamente com o sistema.
+
+## Versionamento automático (releases)
+
+O repositório está configurado para versionamento automático de release com **Release Please** (GitHub Actions).
+
+### Como funciona
+
+- Você continua trabalhando com branches + PRs normalmente
+- Após merge na `main`, a action `Release Please` analisa os commits
+- Ela abre/atualiza uma **PR de release** com:
+  - bump de versão
+  - changelog
+  - tags/releases no GitHub (quando a PR de release for mergeada)
+
+### Convenção de commits (importante)
+
+Use mensagens no padrão **Conventional Commits**:
+
+- `feat: ...` -> nova funcionalidade (incremento `minor` em versões `<1.0.0`)
+- `fix: ...` -> correção (incremento `patch`)
+- `feat!: ...` ou `BREAKING CHANGE:` -> mudança incompatível (`major`)
+
+Exemplos:
+
+- `feat: add transaction filters`
+- `fix: handle refresh token expiration`
+- `feat!: change auth response contract`
+
+### Escopo do versionamento neste projeto
+
+- `backend/` -> release Java (atualiza `backend/pom.xml`)
+- `frontend/` -> release Node/Angular (atualiza `frontend/package.json`)
+
+As tags serão separadas por componente (ex.: `backend-v...` e `frontend-v...`).
