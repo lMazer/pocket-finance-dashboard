@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { BudgetsService } from '../core/api/budgets.service';
 import { CategoriesService } from '../core/api/categories.service';
@@ -20,6 +21,8 @@ import { ToastService } from '../core/ui/toast.service';
 export class BudgetsPageComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly budgetsService = inject(BudgetsService);
   private readonly categoriesService = inject(CategoriesService);
   private readonly transactionsService = inject(TransactionsService);
@@ -46,6 +49,7 @@ export class BudgetsPageComponent {
   });
 
   constructor() {
+    this.restoreMonthFromUrl();
     this.loadData();
   }
 
@@ -225,6 +229,7 @@ export class BudgetsPageComponent {
     const month = this.monthForm.controls.month.value;
     this.isLoading.set(true);
     this.loadError.set(null);
+    this.syncMonthToUrl();
 
     forkJoin({
       categories: this.categoriesService.list(),
@@ -259,6 +264,23 @@ export class BudgetsPageComponent {
 
   private currentMonthRef(): string {
     return new Date().toISOString().slice(0, 7);
+  }
+
+  private restoreMonthFromUrl(): void {
+    const month = this.route.snapshot.queryParamMap.get('month');
+    if (month && /^\d{4}-\d{2}$/.test(month)) {
+      this.monthForm.controls.month.setValue(month);
+    }
+  }
+
+  private syncMonthToUrl(): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        month: this.monthForm.controls.month.value || null
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   private shiftMonth(delta: number): void {
