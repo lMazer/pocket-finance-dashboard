@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.2.0...pocket-finance-frontend-v1.3.0) (2026-02-26)
+
+
+### Features
+
+* add dedicated reports page for CSV import and export ([4be3d96](https://github.com/lMazer/pocket-finance-dashboard/commit/4be3d962c777c0babffb3634bb9c57c46621efea))
+* add reports page for CSV import and export ([be9efd5](https://github.com/lMazer/pocket-finance-dashboard/commit/be9efd53f4972ba6b6450e05d1996e4f00774b74))
+
 ## [1.2.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.1.0...pocket-finance-frontend-v1.2.0) (2026-02-26)
 
 
