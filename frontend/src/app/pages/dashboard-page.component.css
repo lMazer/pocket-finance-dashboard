@@ -1,6 +1,8 @@
 .hero {
   padding: 1rem 1.1rem;
   display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
   gap: 1rem;
 }
 
@@ -34,6 +36,7 @@
   border-radius: 999px;
   padding: 0.45rem 0.8rem;
   font-size: 0.86rem;
+  white-space: nowrap;
 }
 
 .hero__status--error {
@@ -63,6 +66,7 @@
 
 .metric {
   padding: 1rem;
+  min-height: 108px;
 }
 
 .metric__label {
@@ -114,9 +118,14 @@
   padding: 0.8rem;
 }
 
+.list__item > div {
+  min-width: 0;
+}
+
 .list__title {
   margin: 0;
   font-weight: 700;
+  word-break: break-word;
 }
 
 .list__meta {
@@ -129,6 +138,8 @@
   margin: 0;
   color: var(--danger);
   font-weight: 700;
+  white-space: nowrap;
+  text-align: right;
 }
 
 .list__amount--positive {
@@ -185,11 +196,56 @@
 }
 
 @media (max-width: 900px) {
-  .metrics {
+  .hero {
     grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 0.9rem;
+  }
+
+  .hero__status {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .metric {
+    padding: 0.9rem;
+    min-height: auto;
+  }
+
+  .panel {
+    padding: 0.85rem;
+  }
+
+  .list__item {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .list__amount {
+    text-align: left;
+  }
+
+  .budget-summary__row {
+    flex-wrap: wrap;
+    gap: 0.35rem;
   }
 }

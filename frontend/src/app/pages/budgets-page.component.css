@@ -10,6 +10,13 @@
   font-size: 0.78rem;
 }
 
+.budgets__totals span {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 0.35rem 0.55rem;
+  background: rgba(255, 255, 255, 0.02);
+}
+
 .budgets__toolbar {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -35,8 +42,17 @@
   flex-wrap: wrap;
 }
 
+.budgets__month-nav .pf-btn {
+  flex: 1 1 0;
+  text-align: center;
+}
+
 .budgets__create {
   grid-template-columns: 1.4fr 1fr auto;
+}
+
+.budgets__create > .pf-btn {
+  white-space: nowrap;
 }
 
 .budgets__create-error {
@@ -80,6 +96,7 @@
   border-radius: 14px;
   padding: 0.85rem;
   background: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 .budget-row__head {
@@ -123,6 +140,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .budget-row__edit input {
@@ -152,6 +170,14 @@
 }
 
 @media (max-width: 980px) {
+  .budgets {
+    padding: 0.9rem;
+  }
+
+  .budgets__totals {
+    width: 100%;
+  }
+
   .budgets__toolbar {
     grid-template-columns: 1fr;
   }
@@ -159,11 +185,23 @@
   .budgets__create {
     grid-template-columns: 1fr;
   }
+
+  .budgets__create > .pf-btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 720px) {
+  .budgets__month {
+    grid-template-columns: 1fr;
+  }
+
   .budgets__month-nav {
     flex-direction: column;
+  }
+
+  .budgets__month-nav .pf-btn {
+    width: 100%;
   }
 
   .budget-row__head {
@@ -177,5 +215,11 @@
 
   .budget-row__edit input {
     width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .budget-row__edit .pf-btn {
+    width: 100%;
+    text-align: center;
   }
 }
