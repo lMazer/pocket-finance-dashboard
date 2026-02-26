@@ -6,6 +6,7 @@ import { API_BASE_URL } from '../api/api.config';
 import { AuthResponse, AuthSession, LoginRequest, MeResponse, RefreshTokenRequest } from './auth.models';
 
 const STORAGE_KEY = 'pocket_finance_auth_session';
+const REFRESH_LEAD_TIME_MS = 60_000;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -14,11 +15,16 @@ export class AuthService {
 
   private readonly sessionState = signal<AuthSession | null>(this.readStoredSession());
   private refreshRequest$: Observable<AuthSession> | null = null;
+  private refreshTimerId: number | null = null;
 
   readonly session = this.sessionState.asReadonly();
   readonly user = computed(() => this.sessionState()?.user ?? null);
   readonly isAuthenticated = computed(() => !!this.sessionState()?.accessToken && !this.isAccessTokenExpired());
   readonly hasSession = computed(() => !!this.sessionState()?.refreshToken);
+
+  constructor() {
+    this.scheduleProactiveRefresh();
+  }
 
   login(payload: LoginRequest): Observable<AuthSession> {
     return this.http.post<AuthResponse>(`${this.apiBaseUrl}/auth/login`, payload).pipe(
@@ -112,6 +118,7 @@ export class AuthService {
   }
 
   clearSession(): void {
+    this.clearRefreshTimer();
     this.sessionState.set(null);
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -122,6 +129,7 @@ export class AuthService {
 
   private setSession(session: AuthSession): void {
     this.sessionState.set(session);
+    this.scheduleProactiveRefresh();
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
     } catch {
@@ -171,5 +179,34 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+
+  private scheduleProactiveRefresh(): void {
+    this.clearRefreshTimer();
+
+    const session = this.sessionState();
+    if (!session?.refreshToken || !session.expiresAt) {
+      return;
+    }
+
+    const refreshInMs = Math.max(session.expiresAt - Date.now() - REFRESH_LEAD_TIME_MS, 0);
+    this.refreshTimerId = globalThis.setTimeout(() => {
+      if (!this.sessionState()?.refreshToken) {
+        return;
+      }
+
+      this.refreshSession().subscribe({
+        error: () => this.clearSession()
+      });
+    }, refreshInMs);
+  }
+
+  private clearRefreshTimer(): void {
+    if (this.refreshTimerId === null) {
+      return;
+    }
+
+    globalThis.clearTimeout(this.refreshTimerId);
+    this.refreshTimerId = null;
   }
 }
