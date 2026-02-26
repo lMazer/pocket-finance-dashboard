@@ -186,3 +186,12 @@ Dentro de `frontend/`:
 
 - `npm run build:ci` -> build de producao (mesmo alvo usado na CI)
 - `npm run spec:check` -> valida tipagem/compilacao dos testes (`*.spec.ts`) sem precisar de Chrome
+
+### Troubleshooting: testes frontend no container
+
+O comando `npm test` (Karma) pode falhar no container de desenvolvimento por falta de `ChromeHeadless` (`CHROME_BIN`).
+
+Quando isso acontecer:
+
+- use `npm run spec:check` para validar compilacao/tipagem dos testes rapidamente
+- execute `npm test` em um ambiente com Chrome/Chromium instalado (host local ou CI dedicada)
