@@ -219,6 +219,7 @@ Para a action criar PRs/releases automaticamente, o repositório precisa permiti
 
 - Roadmap MVP por sprint: `docs/roadmap-mvp.md`
 - Checklist de aprovacao (PR/entrega): `docs/approval-checklist.md`
+- Checklist de release MVP: `docs/release-checklist-mvp.md`
 
 ## Evidencias (prints)
 
