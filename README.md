@@ -101,6 +101,12 @@ powershell -ExecutionPolicy Bypass -File .\scripts\smoke-dev.ps1 `
   -BackendUrl "http://localhost:18080"
 ```
 
+Status rapido da stack (containers + URLs):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\dev-status.ps1
+```
+
 ### Inicializar automaticamente com o Docker
 
 Os serviços no `compose.dev.yml` usam `restart: unless-stopped`. Isso significa:
