@@ -139,3 +139,10 @@ Para a action criar PRs/releases automaticamente, o repositório precisa permiti
   - `frontend`: `npm run build`
 - O Angular usa budgets de bundle/estilo para sinalizar crescimento excessivo.
 - Os limites de `anyComponentStyle` foram ajustados para um patamar mais realista do layout atual, mantendo alerta sem gerar ruído excessivo no dia a dia.
+
+### Comandos uteis no frontend
+
+Dentro de `frontend/`:
+
+- `npm run build:ci` -> build de producao (mesmo alvo usado na CI)
+- `npm run spec:check` -> valida tipagem/compilacao dos testes (`*.spec.ts`) sem precisar de Chrome
