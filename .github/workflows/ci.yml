@@ -56,4 +56,5 @@ jobs:
         working-directory: frontend
         run: |
           npm run spec:check
+          npm run test:ci
           npm run build

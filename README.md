@@ -186,6 +186,7 @@ Dentro de `frontend/`:
 
 - `npm run build:ci` -> build de producao (mesmo alvo usado na CI)
 - `npm run spec:check` -> valida tipagem/compilacao dos testes (`*.spec.ts`) sem precisar de Chrome
+- `npm run test:ci` -> executa testes unitarios em `ChromeHeadless` (sem watch)
 
 ### Troubleshooting: testes frontend no container
 
