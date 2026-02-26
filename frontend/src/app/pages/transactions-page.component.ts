@@ -230,6 +230,17 @@ export class TransactionsPageComponent {
       });
   }
 
+  protected downloadCsvTemplate(): void {
+    const template = [
+      'date,description,amount,type,category',
+      '2026-02-26,Supermercado,123.45,expense,Alimentacao',
+      '2026-02-27,Salario,3500.00,income,Renda'
+    ].join('\n');
+
+    this.downloadBlob(new Blob([template], { type: 'text/csv;charset=utf-8' }), 'transactions-template.csv');
+    this.toastService.info('Modelo CSV baixado.');
+  }
+
   protected trackByTransactionId = (_: number, item: Transaction) => item.id;
 
   protected currentPage(): number {
