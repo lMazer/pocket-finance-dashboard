@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { CategoriesService } from '../core/api/categories.service';
 import { Category, PageResponse, Transaction, TransactionType } from '../core/api/finance.models';
@@ -20,6 +21,8 @@ import { ToastService } from '../core/ui/toast.service';
 export class TransactionsPageComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly categoriesService = inject(CategoriesService);
   private readonly reportsService = inject(ReportsService);
   private readonly transactionsService = inject(TransactionsService);
@@ -56,6 +59,7 @@ export class TransactionsPageComponent {
   });
 
   constructor() {
+    this.restoreFiltersFromUrl();
     this.bootstrap();
   }
 
@@ -235,10 +239,17 @@ export class TransactionsPageComponent {
   private bootstrap(): void {
     this.isLoading.set(true);
     this.loadError.set(null);
+    const page = this.currentPageFromUrl();
 
     forkJoin({
       categories: this.categoriesService.list(),
-      transactions: this.transactionsService.list({ month: this.filterForm.controls.month.value, page: 0 })
+      transactions: this.transactionsService.list({
+        month: this.filterForm.controls.month.value || null,
+        category: this.filterForm.controls.category.value || null,
+        type: (this.filterForm.controls.type.value || null) as TransactionType | null,
+        q: this.filterForm.controls.q.value?.trim() || null,
+        page
+      })
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -258,6 +269,7 @@ export class TransactionsPageComponent {
     this.isLoading.set(true);
     this.loadError.set(null);
     const filters = this.filterForm.getRawValue();
+    this.syncFiltersToUrl(page);
 
     this.transactionsService
       .list({
@@ -309,6 +321,37 @@ export class TransactionsPageComponent {
 
   private currentMonthRef(): string {
     return new Date().toISOString().slice(0, 7);
+  }
+
+  private restoreFiltersFromUrl(): void {
+    const params = this.route.snapshot.queryParamMap;
+    this.filterForm.patchValue({
+      month: params.get('month') ?? this.currentMonthRef(),
+      category: params.get('category') ?? '',
+      type: params.get('type') ?? '',
+      q: params.get('q') ?? ''
+    });
+  }
+
+  private currentPageFromUrl(): number {
+    const raw = this.route.snapshot.queryParamMap.get('page');
+    const parsed = raw ? Number(raw) : 0;
+    return Number.isInteger(parsed) && parsed >= 0 ? parsed : 0;
+  }
+
+  private syncFiltersToUrl(page: number): void {
+    const filters = this.filterForm.getRawValue();
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        month: filters.month || null,
+        category: filters.category || null,
+        type: filters.type || null,
+        q: filters.q?.trim() || null,
+        page: page > 0 ? page : null
+      },
+      queryParamsHandling: ''
+    });
   }
 
   private todayDate(): string {
