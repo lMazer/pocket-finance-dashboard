@@ -1,0 +1,51 @@
+name: Bug report
+description: Reportar comportamento incorreto ou regressao
+title: "[Bug]: "
+labels:
+  - type:bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Resumo
+      description: Descreva o problema de forma objetiva.
+      placeholder: Ao salvar uma transacao...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Liste os passos numerados.
+      placeholder: |
+        1. Abrir /transactions
+        2. Preencher formulario
+        3. Clicar em "Criar transacao"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+      placeholder: A transacao deve ser criada e exibida na tabela.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportamento atual
+      placeholder: Recebo erro 500 / a UI fica travada...
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Ambiente
+      description: Ex. Windows + Docker Desktop, browser, branch/tag.
+      placeholder: Windows 11, Docker Desktop 4.x, Chrome 133, main
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencias (logs/prints)
+      description: Cole stack trace, logs, respostas HTTP ou imagens.
+

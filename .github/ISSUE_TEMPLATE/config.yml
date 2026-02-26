@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Perguntas de uso / alinhamento
+    url: https://github.com/lMazer/pocket-finance-dashboard/discussions
+    about: Use Discussions quando nao for bug/feature rastreavel.
+
