@@ -3,7 +3,16 @@
     <div class="pf-card__header">
       <div>
         <h2 class="pf-card__title">Transacoes</h2>
-        <p class="pf-card__subtitle">Listagem paginada + filtros + CRUD real.</p>
+        <p class="pf-card__subtitle">Listagem paginada + filtros + CRUD real + import/export CSV.</p>
+      </div>
+      <div class="header-actions">
+        <button class="pf-btn" type="button" (click)="exportCsv()" [disabled]="isExporting()">
+          {{ isExporting() ? 'Exportando...' : 'Exportar CSV' }}
+        </button>
+        <label class="pf-btn pf-btn--primary header-actions__import" [class.is-disabled]="isImporting()">
+          <span>{{ isImporting() ? 'Importando...' : 'Importar CSV' }}</span>
+          <input type="file" accept=".csv,text/csv" (change)="importCsv($event)" [disabled]="isImporting()" />
+        </label>
       </div>
     </div>
 

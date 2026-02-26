@@ -2,6 +2,31 @@
   padding: 1rem;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.header-actions__import {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.header-actions__import input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.header-actions__import.is-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 .filters,
 .editor {
   display: grid;
@@ -148,6 +173,10 @@
 }
 
 @media (max-width: 720px) {
+  .header-actions {
+    width: 100%;
+  }
+
   .filters,
   .editor {
     grid-template-columns: 1fr;

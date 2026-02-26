@@ -6,6 +6,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { CategoriesService } from '../core/api/categories.service';
 import { Category, PageResponse, Transaction, TransactionType } from '../core/api/finance.models';
+import { ReportsService } from '../core/api/reports.service';
 import { TransactionsService } from '../core/api/transactions.service';
 import { ToastService } from '../core/ui/toast.service';
 
@@ -20,6 +21,7 @@ export class TransactionsPageComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
   private readonly categoriesService = inject(CategoriesService);
+  private readonly reportsService = inject(ReportsService);
   private readonly transactionsService = inject(TransactionsService);
   private readonly toastService = inject(ToastService);
 
@@ -29,6 +31,8 @@ export class TransactionsPageComponent {
   protected readonly loadError = signal<string | null>(null);
   protected readonly isSaving = signal(false);
   protected readonly isDeletingId = signal<string | null>(null);
+  protected readonly isImporting = signal(false);
+  protected readonly isExporting = signal(false);
   protected readonly editingTransactionId = signal<string | null>(null);
 
   protected readonly transactionTypes: Array<{ value: TransactionType; label: string }> = [
@@ -160,6 +164,68 @@ export class TransactionsPageComponent {
     return type === 'INCOME' ? 'table__amount table__amount--positive' : 'table__amount';
   }
 
+  protected importCsv(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const file = input?.files?.[0] ?? null;
+    if (!file || this.isImporting()) {
+      if (input) {
+        input.value = '';
+      }
+      return;
+    }
+
+    this.isImporting.set(true);
+    this.reportsService
+      .importCsv(file)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result) => {
+          this.isImporting.set(false);
+          this.toastService.success(`Importacao concluida: ${result.imported} importadas, ${result.skipped} ignoradas.`);
+          this.refreshCategories();
+          this.loadTransactions(this.currentPage());
+          if (input) {
+            input.value = '';
+          }
+        },
+        error: (error) => {
+          this.isImporting.set(false);
+          this.loadError.set(this.resolveErrorMessage(error, 'Nao foi possivel importar o CSV.'));
+          if (input) {
+            input.value = '';
+          }
+        }
+      });
+  }
+
+  protected exportCsv(): void {
+    if (this.isExporting()) {
+      return;
+    }
+
+    const filters = this.filterForm.getRawValue();
+    this.isExporting.set(true);
+    this.reportsService
+      .exportCsv({
+        month: filters.month || null,
+        category: filters.category || null
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.isExporting.set(false);
+          const filename = this.resolveDownloadFilename(response.headers.get('content-disposition'), filters.month || null);
+          const blob = response.body ?? new Blob([], { type: 'text/csv' });
+          this.downloadBlob(blob, filename);
+          this.toastService.success('CSV exportado com sucesso.');
+        },
+        error: (error) => {
+          this.isExporting.set(false);
+          this.loadError.set(this.resolveErrorMessage(error, 'Nao foi possivel exportar o CSV.'));
+        }
+      });
+  }
+
   protected trackByTransactionId = (_: number, item: Transaction) => item.id;
 
   protected currentPage(): number {
@@ -214,6 +280,20 @@ export class TransactionsPageComponent {
       });
   }
 
+  private refreshCategories(): void {
+    this.categoriesService
+      .list()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (categories) => {
+          this.categories.set(categories);
+        },
+        error: () => {
+          // Keep current categories if refresh fails; global interceptor/toasts already handle the error.
+        }
+      });
+  }
+
   private resetTransactionForm(): void {
     this.editingTransactionId.set(null);
     this.transactionForm.reset({
@@ -246,5 +326,23 @@ export class TransactionsPageComponent {
       }
     }
     return fallback;
+  }
+
+  private resolveDownloadFilename(contentDisposition: string | null, month: string | null): string {
+    const match = contentDisposition?.match(/filename=\"?([^\";]+)\"?/i);
+    if (match?.[1]) {
+      return match[1];
+    }
+
+    return month ? `transactions-${month}.csv` : 'transactions.csv';
+  }
+
+  private downloadBlob(blob: Blob, filename: string): void {
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = filename;
+    anchor.click();
+    URL.revokeObjectURL(objectUrl);
   }
 }
