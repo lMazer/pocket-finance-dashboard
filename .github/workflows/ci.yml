@@ -44,12 +44,7 @@ jobs:
 
       - name: Install frontend dependencies
         working-directory: frontend
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install --no-package-lock
-          fi
+        run: npm ci
 
       - name: Build frontend
         working-directory: frontend
