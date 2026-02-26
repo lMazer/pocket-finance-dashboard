@@ -1,0 +1,52 @@
+name: Feature request
+description: Solicitar nova funcionalidade ou melhoria
+title: "[Feature]: "
+labels:
+  - type:feature
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema/oportunidade
+      description: Qual dor essa feature resolve?
+      placeholder: Hoje preciso...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta
+      description: Descreva a funcionalidade desejada.
+      placeholder: Adicionar uma tela/acao que...
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Escopo MVP
+      description: O que entra e o que pode ficar para depois?
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceitacao
+      placeholder: |
+        - [ ] Usuario consegue...
+        - [ ] API retorna...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area principal
+      options:
+        - frontend
+        - backend
+        - docs
+        - infra/devx
+        - release/processo
+  - type: textarea
+    id: notes
+    attributes:
+      label: Referencias adicionais
+      description: Links, mockups, endpoint sugerido, etc.
+
