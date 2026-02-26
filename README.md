@@ -45,6 +45,32 @@ As portas acima refletem o `.env` versionado no projeto. Se você sobrescrever v
 - Alterações em `frontend/` recarregam no `ng serve`
 - Alterações em `backend/` reiniciam automaticamente a aplicação (DevTools)
 
+### Importação/Exportação CSV (frontend)
+
+Na tela `Transacoes` (`/transactions`) você pode:
+
+- `Modelo CSV`: baixa um arquivo exemplo com cabeçalho e linhas modelo
+- `Importar CSV`: envia um arquivo `.csv` para `/import/csv`
+- `Exportar CSV`: baixa um CSV gerado por `/export/csv` com filtros atuais (mês/categoria)
+
+Formato esperado (cabeçalho):
+
+```csv
+date,description,amount,type,category
+```
+
+Exemplo de linha:
+
+```csv
+2026-02-26,Supermercado,123.45,expense,Alimentacao
+```
+
+Observações:
+
+- `type`: `expense` ou `income`
+- `amount`: decimal com ponto
+- A ordem das colunas pode variar, desde que os nomes do cabeçalho existam
+
 ### Parar / reiniciar
 
 ```bash
