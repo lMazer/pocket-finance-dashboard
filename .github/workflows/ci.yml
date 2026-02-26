@@ -54,4 +54,6 @@ jobs:
 
       - name: Build frontend
         working-directory: frontend
-        run: npm run build
+        run: |
+          npm run spec:check
+          npm run build
