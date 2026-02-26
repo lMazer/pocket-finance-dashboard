@@ -59,6 +59,22 @@ Para remover também o volume do banco:
 docker compose -f compose.dev.yml down -v
 ```
 
+### Smoke test rapido (PowerShell)
+
+Depois de subir a stack, rode um smoke test local para validar frontend + backend + OpenAPI:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\smoke-dev.ps1
+```
+
+Se estiver usando portas sobrescritas, informe as URLs:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\smoke-dev.ps1 `
+  -FrontendUrl "http://localhost:14200" `
+  -BackendUrl "http://localhost:18080"
+```
+
 ### Inicializar automaticamente com o Docker
 
 Os serviços no `compose.dev.yml` usam `restart: unless-stopped`. Isso significa:
@@ -115,3 +131,11 @@ Para a action criar PRs/releases automaticamente, o repositório precisa permiti
 - `Settings > Actions > General > Workflow permissions`
 - `Read and write permissions`
 - `Allow GitHub Actions to create and approve pull requests`
+
+## Qualidade (builds e warnings)
+
+- A CI valida:
+  - `backend`: `mvn test`
+  - `frontend`: `npm run build`
+- O Angular usa budgets de bundle/estilo para sinalizar crescimento excessivo.
+- Os limites de `anyComponentStyle` foram ajustados para um patamar mais realista do layout atual, mantendo alerta sem gerar ruído excessivo no dia a dia.
