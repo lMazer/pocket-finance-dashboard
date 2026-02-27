@@ -66,4 +66,44 @@ describe('ShellLayoutComponent', () => {
     expect(toastServiceMock.info).toHaveBeenCalledWith('Sessao encerrada.');
     expect(navigateSpy).toHaveBeenCalledWith('/login');
   });
+
+  it('should open and close mobile nav from toggle and backdrop', () => {
+    const fixture = TestBed.createComponent(ShellLayoutComponent);
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    const menuToggle = host.querySelector('button[aria-controls="pf-mobile-nav"]') as HTMLButtonElement;
+    expect(menuToggle.getAttribute('aria-expanded')).toBe('false');
+
+    menuToggle.click();
+    fixture.detectChanges();
+
+    expect(menuToggle.getAttribute('aria-expanded')).toBe('true');
+    expect(host.querySelector('.shell__sidebar')?.classList.contains('shell__sidebar--open')).toBeTrue();
+    expect(host.querySelector('.shell__backdrop')).not.toBeNull();
+
+    (host.querySelector('.shell__backdrop') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(menuToggle.getAttribute('aria-expanded')).toBe('false');
+    expect(host.querySelector('.shell__sidebar')?.classList.contains('shell__sidebar--open')).toBeFalse();
+    expect(host.querySelector('.shell__backdrop')).toBeNull();
+  });
+
+  it('should close mobile nav when a nav link is clicked', () => {
+    const fixture = TestBed.createComponent(ShellLayoutComponent);
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    const menuToggle = host.querySelector('button[aria-controls="pf-mobile-nav"]') as HTMLButtonElement;
+    menuToggle.click();
+    fixture.detectChanges();
+
+    const firstNavLink = host.querySelector('.nav__link') as HTMLAnchorElement;
+    firstNavLink.click();
+    fixture.detectChanges();
+
+    expect(menuToggle.getAttribute('aria-expanded')).toBe('false');
+    expect(host.querySelector('.shell__sidebar')?.classList.contains('shell__sidebar--open')).toBeFalse();
+  });
 });
