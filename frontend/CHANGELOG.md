@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.5.0...pocket-finance-frontend-v1.6.0) (2026-02-27)
+
+
+### Features
+
+* **frontend:** add comfortable/compact density mode on transactions ([2137ebe](https://github.com/lMazer/pocket-finance-dashboard/commit/2137ebec818d7f18121810713c87f534baf52f1c))
+* **frontend:** add transactions density mode toggle ([4ba3e18](https://github.com/lMazer/pocket-finance-dashboard/commit/4ba3e18ce84dc8f6e9bf7a8167686c59f268a60a))
+
 ## [1.5.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.4.0...pocket-finance-frontend-v1.5.0) (2026-02-27)
 
 
