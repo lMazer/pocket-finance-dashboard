@@ -5,7 +5,8 @@
       "release-type": "java",
       "package-name": "pocket-finance-backend",
       "include-component-in-tag": true,
-      "bump-minor-pre-major": true
+      "bump-minor-pre-major": true,
+      "skip-snapshot": true
     },
     "frontend": {
       "release-type": "node",
