@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.4.0...pocket-finance-frontend-v1.5.0) (2026-02-27)
+
+
+### Features
+
+* apply premium UI polish and iconified navigation ([694d65d](https://github.com/lMazer/pocket-finance-dashboard/commit/694d65dc1aaf0b2e892630e33b1f182e9d78c12e))
+* premium UI polish with icon-based navigation ([5f0010a](https://github.com/lMazer/pocket-finance-dashboard/commit/5f0010a0fdc73ecc1e819dd9300804d818b86a93))
+
 ## [1.4.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.3.0...pocket-finance-frontend-v1.4.0) (2026-02-26)
 
 
