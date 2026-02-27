@@ -58,3 +58,47 @@ jobs:
           npm run spec:check
           npm run test:ci
           npm run build
+
+  visual-smoke:
+    name: Visual Smoke (Docker + Screenshots)
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start docker stack
+        run: docker compose -f compose.dev.yml up -d db backend frontend
+
+      - name: Wait for services
+        run: |
+          for i in {1..120}; do
+            if curl -fsS http://localhost:8080/actuator/health >/dev/null && curl -fsS http://localhost:4200 >/dev/null; then
+              echo "Services are up"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "Services did not become healthy in time"
+          docker compose -f compose.dev.yml ps
+          exit 1
+
+      - name: Run visual smoke script
+        run: pwsh -File ./scripts/visual-smoke.ps1 -FrontendUrl "http://localhost:4200" -BackendUrl "http://localhost:8080" -OutDir "./artifacts/smoke"
+
+      - name: Upload visual smoke artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-smoke-${{ github.run_id }}
+          path: artifacts/smoke
+          if-no-files-found: warn
+
+      - name: Dump compose logs on failure
+        if: failure()
+        run: docker compose -f compose.dev.yml logs --tail 200
+
+      - name: Stop docker stack
+        if: always()
+        run: docker compose -f compose.dev.yml down -v
