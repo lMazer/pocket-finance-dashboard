@@ -1,4 +1,4 @@
-<section class="pf-page">
+<section class="pf-page transactions-shell" [class.transactions-shell--compact]="density() === 'compact'">
   <article class="pf-card transactions-panel" [attr.aria-busy]="isLoading() || isSaving() || isImporting() || isExporting()">
     <div class="pf-card__header">
       <div>
@@ -9,6 +9,26 @@
         </p>
       </div>
       <div class="header-actions">
+        <div class="density-toggle" role="group" aria-label="Densidade da listagem">
+          <button
+            class="density-toggle__option"
+            type="button"
+            [class.is-active]="density() === 'comfortable'"
+            [attr.aria-pressed]="density() === 'comfortable'"
+            (click)="setDensity('comfortable')"
+          >
+            Confortavel
+          </button>
+          <button
+            class="density-toggle__option"
+            type="button"
+            [class.is-active]="density() === 'compact'"
+            [attr.aria-pressed]="density() === 'compact'"
+            (click)="setDensity('compact')"
+          >
+            Compacto
+          </button>
+        </div>
         <button class="pf-btn" type="button" (click)="downloadCsvTemplate()">Modelo CSV</button>
         <button class="pf-btn" type="button" (click)="exportCsv()" [disabled]="isExporting()">
           {{ isExporting() ? 'Exportando...' : 'Exportar CSV' }}
