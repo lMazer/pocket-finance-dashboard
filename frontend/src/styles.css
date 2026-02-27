@@ -1,18 +1,22 @@
+@import url("https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css");
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 :root {
-  --bg: #08111f;
-  --bg-soft: #0e1a2d;
-  --panel: rgba(13, 23, 39, 0.8);
-  --panel-border: rgba(255, 255, 255, 0.08);
-  --text: #e7eefc;
-  --text-muted: #9bb0d1;
+  --bg: #050b17;
+  --bg-soft: #0f1c31;
+  --panel: rgba(10, 19, 35, 0.78);
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --text: #ecf2ff;
+  --text-muted: #9eb3d7;
   --accent: #52d6a5;
   --accent-strong: #2cbf8b;
+  --accent-cold: #6eb8ff;
   --warn: #ffc46b;
   --danger: #ff8f82;
-  --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.28);
+  --font-mono: "IBM Plex Mono", monospace;
   --focus-ring: rgba(82, 214, 165, 0.55);
   --focus-ring-soft: rgba(82, 214, 165, 0.22);
 }
@@ -32,10 +36,36 @@ body {
 body {
   font-family: "Manrope", system-ui, sans-serif;
   color: var(--text);
+  overflow-x: hidden;
   background:
-    radial-gradient(circle at 15% 10%, rgba(82, 214, 165, 0.16), transparent 40%),
-    radial-gradient(circle at 85% 15%, rgba(71, 137, 255, 0.2), transparent 45%),
-    linear-gradient(180deg, #08111f 0%, #060b15 100%);
+    radial-gradient(circle at 12% 14%, rgba(82, 214, 165, 0.2), transparent 42%),
+    radial-gradient(circle at 88% 12%, rgba(110, 184, 255, 0.24), transparent 44%),
+    linear-gradient(180deg, #071122 0%, #040913 100%);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::before {
+  opacity: 0.38;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(circle at 20% 0%, #000 35%, transparent 78%);
+}
+
+body::after {
+  background:
+    radial-gradient(circle at 20% 70%, rgba(82, 214, 165, 0.16), transparent 38%),
+    radial-gradient(circle at 80% 78%, rgba(110, 184, 255, 0.13), transparent 32%);
+  animation: pf-atmosphere 16s ease-in-out infinite alternate;
 }
 
 button,
@@ -64,15 +94,52 @@ textarea {
 
 .pf-page {
   display: grid;
-  gap: 1rem;
+  gap: 1.05rem;
+}
+
+.pf-page > * {
+  animation: pf-rise 420ms ease both;
+}
+
+.pf-page > *:nth-child(2) {
+  animation-delay: 60ms;
+}
+
+.pf-page > *:nth-child(3) {
+  animation-delay: 120ms;
 }
 
 .pf-card {
+  position: relative;
+  overflow: hidden;
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: 20px;
   box-shadow: var(--shadow);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.pf-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.02) 35%,
+    rgba(82, 214, 165, 0.06) 100%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+
+.pf-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: var(--shadow), 0 0 0 1px rgba(82, 214, 165, 0.08);
+  transform: translateY(-1px);
 }
 
 .pf-skip-link {
@@ -99,19 +166,27 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.9rem;
 }
 
 .pf-card__title {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.02rem;
   font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .pf-card__subtitle {
-  margin: 0.25rem 0 0;
+  margin: 0.3rem 0 0;
   color: var(--text-muted);
   font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: 0.01em;
 }
 
 .pf-mono {
@@ -125,7 +200,8 @@ textarea {
   border-radius: 12px;
   padding: 0.55rem 0.75rem;
   cursor: pointer;
-  transition: border-color 120ms ease, background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+  transition: border-color 140ms ease, background-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+  box-shadow: var(--shadow-soft);
 }
 
 .pf-btn:hover:not(:disabled) {
@@ -149,7 +225,7 @@ textarea {
 .pf-btn--primary {
   color: #041210;
   border-color: rgba(82, 214, 165, 0.45);
-  background: linear-gradient(135deg, var(--accent), #7cf7e2);
+  background: linear-gradient(135deg, var(--accent), #7cf7e2 55%, #9cf5ff 100%);
   font-weight: 700;
 }
 
@@ -178,6 +254,7 @@ textarea {
   padding: 0.7rem 0.8rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 143, 130, 0.25);
+  border-left: 3px solid rgba(255, 143, 130, 0.8);
   background: rgba(255, 143, 130, 0.07);
   color: #ffd4cf;
   font-size: 0.88rem;
@@ -186,8 +263,8 @@ textarea {
 .pf-empty {
   margin: 0;
   border-radius: 12px;
-  border: 1px dashed rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.015);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.025);
   color: var(--text-muted);
   padding: 0.8rem;
   font-size: 0.88rem;
@@ -212,6 +289,30 @@ textarea:disabled {
   cursor: not-allowed;
 }
 
+@keyframes pf-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pf-atmosphere {
+  from {
+    transform: translateY(0) scale(1);
+    opacity: 0.95;
+  }
+
+  to {
+    transform: translateY(-10px) scale(1.04);
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -220,5 +321,24 @@ textarea:disabled {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .pf-page > * {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .pf-card__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pf-card__title {
+    font-size: 0.95rem;
+  }
+
+  .pf-card__subtitle {
+    font-size: 0.84rem;
   }
 }

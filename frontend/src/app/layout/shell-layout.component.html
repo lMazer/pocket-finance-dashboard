@@ -22,7 +22,10 @@
           routerLinkActive="nav__link--active"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-          <span>{{ item.label }}</span>
+          <span class="nav__main">
+            <i class="nav__icon" [ngClass]="item.icon" aria-hidden="true"></i>
+            <span>{{ item.label }}</span>
+          </span>
           @if (item.badge) {
             <span class="nav__badge">{{ item.badge }}</span>
           }
@@ -64,9 +67,11 @@
       </div>
       <div class="shell__topbar-actions">
         <a class="topbar-link" href="http://localhost:38080/swagger-ui/index.html" target="_blank" rel="noopener">
+          <i class="ri-book-open-line" aria-hidden="true"></i>
           Swagger
         </a>
         <button class="topbar-link topbar-link--button" type="button" (click)="logout()" [disabled]="isLoggingOut()">
+          <i class="ri-logout-box-r-line" aria-hidden="true"></i>
           {{ isLoggingOut() ? 'Saindo...' : 'Sair' }}
         </button>
       </div>
