@@ -14,6 +14,8 @@ import { StateEmptyComponent } from '../shared/state/state-empty.component';
 import { StateErrorComponent } from '../shared/state/state-error.component';
 import { StateLoadingComponent } from '../shared/state/state-loading.component';
 
+type TransactionsDensity = 'comfortable' | 'compact';
+
 @Component({
   selector: 'app-transactions-page',
   standalone: true,
@@ -22,6 +24,8 @@ import { StateLoadingComponent } from '../shared/state/state-loading.component';
   styleUrl: './transactions-page.component.css'
 })
 export class TransactionsPageComponent {
+  private static readonly densityStorageKey = 'transactions.page.density';
+
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
@@ -40,6 +44,7 @@ export class TransactionsPageComponent {
   protected readonly isImporting = signal(false);
   protected readonly isExporting = signal(false);
   protected readonly editingTransactionId = signal<string | null>(null);
+  protected readonly density = signal<TransactionsDensity>('comfortable');
 
   protected readonly transactionTypes: Array<{ value: TransactionType; label: string }> = [
     { value: 'EXPENSE', label: 'Despesa' },
@@ -63,7 +68,17 @@ export class TransactionsPageComponent {
 
   constructor() {
     this.restoreFiltersFromUrl();
+    this.restoreDensityPreference();
     this.bootstrap();
+  }
+
+  protected setDensity(mode: TransactionsDensity): void {
+    if (this.density() === mode) {
+      return;
+    }
+
+    this.density.set(mode);
+    this.persistDensityPreference(mode);
   }
 
   protected applyFilters(): void {
@@ -345,6 +360,25 @@ export class TransactionsPageComponent {
       type: params.get('type') ?? '',
       q: params.get('q') ?? ''
     });
+  }
+
+  private restoreDensityPreference(): void {
+    try {
+      const raw = window.localStorage.getItem(TransactionsPageComponent.densityStorageKey);
+      if (raw === 'compact' || raw === 'comfortable') {
+        this.density.set(raw);
+      }
+    } catch {
+      // Ignore storage read errors and keep default density.
+    }
+  }
+
+  private persistDensityPreference(mode: TransactionsDensity): void {
+    try {
+      window.localStorage.setItem(TransactionsPageComponent.densityStorageKey, mode);
+    } catch {
+      // Ignore storage write errors and keep in-memory preference.
+    }
   }
 
   private currentPageFromUrl(): number {

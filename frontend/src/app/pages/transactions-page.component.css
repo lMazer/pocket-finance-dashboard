@@ -6,6 +6,20 @@
     radial-gradient(circle at 16% 92%, rgba(82, 214, 165, 0.08), transparent 44%);
 }
 
+.transactions-shell {
+  --transactions-grid-gap: 0.75rem;
+  --transactions-section-padding: 0.85rem;
+  --transactions-input-padding: 0.65rem 0.75rem;
+  --transactions-cell-padding: 0.8rem 0.75rem;
+}
+
+.transactions-shell--compact {
+  --transactions-grid-gap: 0.55rem;
+  --transactions-section-padding: 0.65rem;
+  --transactions-input-padding: 0.5rem 0.65rem;
+  --transactions-cell-padding: 0.58rem 0.65rem;
+}
+
 .transactions-panel__meta {
   margin: 0.45rem 0 0;
   color: rgba(158, 179, 215, 0.9);
@@ -38,14 +52,43 @@
   pointer-events: none;
 }
 
+.density-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.density-toggle__option {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.36rem 0.62rem;
+  cursor: pointer;
+}
+
+.density-toggle__option:focus-visible {
+  outline: 2px solid rgba(82, 214, 165, 0.35);
+}
+
+.density-toggle__option.is-active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(82, 214, 165, 0.45), rgba(110, 184, 255, 0.45));
+}
+
 .filters,
 .editor {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: var(--transactions-grid-gap);
   margin-bottom: 0.9rem;
   align-items: end;
-  padding: 0.85rem;
+  padding: var(--transactions-section-padding);
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.02);
@@ -72,7 +115,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.045);
   color: var(--text);
-  padding: 0.65rem 0.75rem;
+  padding: var(--transactions-input-padding);
   transition: border-color 140ms ease, background-color 140ms ease, box-shadow 140ms ease;
 }
 
@@ -124,7 +167,7 @@
 .table th,
 .table td {
   text-align: left;
-  padding: 0.8rem 0.75rem;
+  padding: var(--transactions-cell-padding);
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   vertical-align: middle;
 }
@@ -228,6 +271,10 @@
 
   .header-actions > * {
     flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .density-toggle {
     justify-content: center;
   }
 
