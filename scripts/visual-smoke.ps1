@@ -7,20 +7,40 @@ param(
 $ErrorActionPreference = "Stop"
 
 function Resolve-ChromePath {
-  $candidates = @(
-    "C:\Program Files\Google\Chrome\Application\chrome.exe",
-    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-    "C:\Program Files\Microsoft\Edge\Application\msedge.exe",
-    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-  )
+  $isWindowsHost = (($PSVersionTable.PSEdition -eq "Desktop") -or ($env:OS -eq "Windows_NT") -or $IsWindows)
 
-  foreach ($candidate in $candidates) {
-    if (Test-Path $candidate) {
-      return $candidate
+  if ($isWindowsHost) {
+    $candidates = @(
+      "C:\Program Files\Google\Chrome\Application\chrome.exe",
+      "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+      "C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+      "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+    )
+
+    foreach ($candidate in $candidates) {
+      if (Test-Path $candidate) {
+        return $candidate
+      }
+    }
+  } else {
+    $commands = @(
+      "google-chrome",
+      "google-chrome-stable",
+      "chromium-browser",
+      "chromium",
+      "microsoft-edge",
+      "microsoft-edge-stable"
+    )
+
+    foreach ($commandName in $commands) {
+      $command = Get-Command $commandName -ErrorAction SilentlyContinue
+      if ($command -and $command.Path) {
+        return $command.Path
+      }
     }
   }
 
-  throw "Nao foi encontrado Chrome/Edge para captura headless."
+  throw "Nao foi encontrado Chrome/Edge para captura headless neste ambiente."
 }
 
 function Capture-Screenshot {

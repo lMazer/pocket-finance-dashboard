@@ -260,6 +260,7 @@ node scripts/capture-readme-prints.mjs
 - A CI valida:
   - `backend`: `mvn test`
   - `frontend`: `npm run build`
+  - `visual-smoke`: sobe stack Docker dev, executa `scripts/visual-smoke.ps1` e publica screenshots como artifact
 - O Angular usa budgets de bundle/estilo para sinalizar crescimento excessivo.
 - Os limites de `anyComponentStyle` foram ajustados para um patamar mais realista do layout atual, mantendo alerta sem gerar ruído excessivo no dia a dia.
 
