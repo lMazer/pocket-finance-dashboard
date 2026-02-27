@@ -126,6 +126,17 @@ powershell -ExecutionPolicy Bypass -File .\scripts\dev-logs.ps1 -Service fronten
 powershell -ExecutionPolicy Bypass -File .\scripts\dev-logs.ps1 -Service backend -NoFollow -Tail 50
 ```
 
+Smoke visual (desktop + mobile) com capturas:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\visual-smoke.ps1
+```
+
+Saida padrao de capturas:
+
+- `docs/prints/smoke/desktop/*.png`
+- `docs/prints/smoke/mobile/*.png`
+
 ### Inicializar automaticamente com o Docker
 
 Os serviços no `compose.dev.yml` usam `restart: unless-stopped`. Isso significa:
@@ -220,6 +231,7 @@ Para a action criar PRs/releases automaticamente, o repositório precisa permiti
 - Roadmap MVP por sprint: `docs/roadmap-mvp.md`
 - Checklist de aprovacao (PR/entrega): `docs/approval-checklist.md`
 - Checklist de release MVP: `docs/release-checklist-mvp.md`
+- Registro da ultima validacao de release: `docs/release-readiness.md`
 
 ## Evidencias (prints)
 
