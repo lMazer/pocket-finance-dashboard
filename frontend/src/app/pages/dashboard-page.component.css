@@ -4,6 +4,10 @@
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 1rem;
+  border: 1px solid rgba(110, 184, 255, 0.18);
+  background:
+    radial-gradient(circle at 85% 15%, rgba(110, 184, 255, 0.2), transparent 42%),
+    radial-gradient(circle at 14% 80%, rgba(82, 214, 165, 0.12), transparent 40%);
 }
 
 .hero__eyebrow {
@@ -37,6 +41,7 @@
   padding: 0.45rem 0.8rem;
   font-size: 0.86rem;
   white-space: nowrap;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .hero__status--error {
@@ -67,6 +72,13 @@
 .metric {
   padding: 1rem;
   min-height: 108px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01));
+}
+
+.metric:hover {
+  transform: translateY(-2px);
+  border-color: rgba(82, 214, 165, 0.28);
 }
 
 .metric__label {
@@ -77,8 +89,9 @@
 
 .metric__value {
   margin: 0.45rem 0 0;
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 800;
+  letter-spacing: 0.01em;
 }
 
 .metric--positive .metric__value {
@@ -97,6 +110,12 @@
 
 .panel {
   padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.panel .pf-card__header {
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .list {
@@ -114,8 +133,14 @@
   gap: 1rem;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
   padding: 0.8rem;
+  transition: transform 140ms ease, border-color 140ms ease;
+}
+
+.list__item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(82, 214, 165, 0.2);
 }
 
 .list__item > div {
@@ -181,12 +206,13 @@
   height: 0.6rem;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .budget-summary__fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), #85ffe0);
+  background: linear-gradient(90deg, var(--accent), #85ffe0 55%, #7ec9ff);
+  box-shadow: 0 0 20px rgba(82, 214, 165, 0.3);
 }
 
 .budget-summary__caption {

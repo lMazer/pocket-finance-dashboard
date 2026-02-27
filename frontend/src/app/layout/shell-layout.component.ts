@@ -8,6 +8,7 @@ import { ToastService } from '../core/ui/toast.service';
 interface NavItem {
   label: string;
   path: string;
+  icon: string;
   badge?: string;
 }
 
@@ -30,11 +31,11 @@ export class ShellLayoutComponent {
   protected readonly isLoggingOut = signal(false);
   protected readonly isNavOpen = signal(false);
   protected readonly navItems: NavItem[] = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Transacoes', path: '/transactions' },
-    { label: 'Relatorios', path: '/reports', badge: 'CSV' },
-    { label: 'Categorias', path: '/categories' },
-    { label: 'Metas', path: '/budgets', badge: 'MVP' }
+    { label: 'Dashboard', path: '/dashboard', icon: 'ri-line-chart-line' },
+    { label: 'Transacoes', path: '/transactions', icon: 'ri-exchange-dollar-line' },
+    { label: 'Relatorios', path: '/reports', icon: 'ri-file-chart-line', badge: 'CSV' },
+    { label: 'Categorias', path: '/categories', icon: 'ri-price-tag-3-line' },
+    { label: 'Metas', path: '/budgets', icon: 'ri-focus-3-line', badge: 'MVP' }
   ];
 
   protected logout(): void {

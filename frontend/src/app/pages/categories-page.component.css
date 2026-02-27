@@ -1,5 +1,15 @@
 .categories {
   padding: 1rem;
+  border: 1px solid rgba(82, 214, 165, 0.18);
+  background:
+    radial-gradient(circle at 10% 85%, rgba(82, 214, 165, 0.12), transparent 36%),
+    radial-gradient(circle at 92% 12%, rgba(110, 184, 255, 0.1), transparent 35%);
+}
+
+.categories__meta {
+  margin: 0.5rem 0 0;
+  color: rgba(158, 179, 215, 0.9);
+  font-size: 0.76rem;
 }
 
 .categories__form {
@@ -7,7 +17,11 @@
   grid-template-columns: 1.4fr 1fr auto;
   gap: 0.75rem;
   align-items: end;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.9rem;
+  padding: 0.85rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .field {
@@ -24,14 +38,16 @@
   width: 100%;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text);
   padding: 0.65rem 0.75rem;
+  transition: border-color 140ms ease, background-color 140ms ease;
 }
 
 .field input:focus {
   outline: 2px solid rgba(82, 214, 165, 0.25);
   border-color: rgba(82, 214, 165, 0.35);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .field--color .field__color-wrap {
@@ -60,10 +76,16 @@
 .category-card {
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.02);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
   padding: 0.9rem;
   display: grid;
   gap: 0.75rem;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(82, 214, 165, 0.3);
 }
 
 .category-card__main {
@@ -77,7 +99,7 @@
   height: 0.9rem;
   border-radius: 999px;
   flex: 0 0 auto;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.03), 0 0 18px rgba(82, 214, 165, 0.22);
 }
 
 .category-card__name {
