@@ -63,6 +63,10 @@ jobs:
     name: Visual Smoke (Docker + Screenshots)
     runs-on: ubuntu-latest
     needs: [backend, frontend]
+    env:
+      POSTGRES_PORT: 35432
+      BACKEND_PORT: 38080
+      FRONTEND_PORT: 34200
 
     steps:
       - name: Checkout
@@ -74,7 +78,7 @@ jobs:
       - name: Wait for services
         run: |
           for i in {1..120}; do
-            if curl -fsS http://localhost:8080/actuator/health >/dev/null && curl -fsS http://localhost:4200 >/dev/null; then
+            if curl -fsS http://localhost:38080/actuator/health >/dev/null && curl -fsS http://localhost:34200 >/dev/null; then
               echo "Services are up"
               exit 0
             fi
@@ -85,7 +89,7 @@ jobs:
           exit 1
 
       - name: Run visual smoke script
-        run: pwsh -File ./scripts/visual-smoke.ps1 -FrontendUrl "http://localhost:4200" -BackendUrl "http://localhost:8080" -OutDir "./artifacts/smoke"
+        run: pwsh -File ./scripts/visual-smoke.ps1 -FrontendUrl "http://localhost:34200" -BackendUrl "http://localhost:38080" -OutDir "./artifacts/smoke"
 
       - name: Upload visual smoke artifacts
         if: always()
