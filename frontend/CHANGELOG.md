@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.4.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.3.0...pocket-finance-frontend-v1.4.0) (2026-02-26)
+
+
+### Features
+
+* add reusable loading empty and error state components ([4c87173](https://github.com/lMazer/pocket-finance-dashboard/commit/4c87173cef8101470d5605cc064311300147692d))
+* add reusable loading empty and error state components ([5c39970](https://github.com/lMazer/pocket-finance-dashboard/commit/5c3997018a49502214accdb5cf65dc0d808867c0))
+* apply basic accessibility improvements to main screens ([dc314b6](https://github.com/lMazer/pocket-finance-dashboard/commit/dc314b67e4ace867477242fde01452024a96aa04))
+* apply basic accessibility improvements to main screens ([5eee619](https://github.com/lMazer/pocket-finance-dashboard/commit/5eee619bf9c166e64e32efb9c58ffea77c816ea9))
+* improve shell mobile navigation responsiveness ([3fc7e19](https://github.com/lMazer/pocket-finance-dashboard/commit/3fc7e19e8cd415834a53fd489ca9d341e0e8de89))
+* improve shell mobile navigation responsiveness ([f6c780d](https://github.com/lMazer/pocket-finance-dashboard/commit/f6c780da82ccf2586393524033189b1eb6f39f77))
+* improve transaction table and form responsiveness ([df20d79](https://github.com/lMazer/pocket-finance-dashboard/commit/df20d799d21617395fe0fac2872489a2462624f3))
+* improve transaction table and form responsiveness ([1947fd7](https://github.com/lMazer/pocket-finance-dashboard/commit/1947fd7d60671dbda3981f631977b3c8f55ea309))
+* refine dashboard and budgets responsive polish ([3c07047](https://github.com/lMazer/pocket-finance-dashboard/commit/3c070479410788a3113d59e9bc112278171ebed3))
+* refine dashboard and budgets responsive polish ([0e71114](https://github.com/lMazer/pocket-finance-dashboard/commit/0e7111458c9b7c3dfde4112872913f87cbaa9867))
+
 ## [1.3.0](https://github.com/lMazer/pocket-finance-dashboard/compare/pocket-finance-frontend-v1.2.0...pocket-finance-frontend-v1.3.0) (2026-02-26)
 
 
